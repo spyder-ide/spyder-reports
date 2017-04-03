@@ -3,7 +3,7 @@
 ## Installation
 
 
-spyder_reports
+Spyder Reports
 ======
 
 Build status
@@ -60,7 +60,7 @@ Using conda
 
 ::
 
-conda install spyder_reports -c conda-forge
+conda install spyder_reports -c spyder-ide
 
 Usage
 -----
