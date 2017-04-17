@@ -11,4 +11,7 @@ from qtpy.QtWidgets import QWidget
 
 class ReportsWidget(QWidget):
     """Reports widget."""
-    pass
+    def __init__(self, parent):
+        QWidget.__init__(self, parent)
+
+        self.setWindowTitle("Reports")
