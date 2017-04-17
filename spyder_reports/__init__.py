@@ -6,3 +6,5 @@
 # (see LICENSE.txt for details)
 # -----------------------------------------------------------------------------
 """Spyder Reports Plugin."""
+
+from ._version import __version__
