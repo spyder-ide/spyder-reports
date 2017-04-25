@@ -82,7 +82,16 @@ class ReportsPlugin(SpyderPluginWidget):
 
     def update_html(self, file):
         doc = Pweb(file)
-        doc.setformat('md2html', theme="skeleton")
+
+        # TODO Add more formats support
+        if doc.file_ext == '.mdw':
+            doc.setformat('md2html', theme="skeleton")
+        elif doc.file_ext == '.md':
+            doc.setformat('pandoc2html')
+        else:
+            print("Format not supported ({})".format(doc.file_ext))
+            return
+
         doc.detect_reader()
 
         doc.parse()
