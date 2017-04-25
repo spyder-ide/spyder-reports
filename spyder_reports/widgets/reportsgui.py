@@ -7,15 +7,15 @@
 # -----------------------------------------------------------------------------
 """Reports Widget."""
 
-from qtpy.QtWidgets import QWidget
+from qtpy.QtWidgets import QWidget, QVBoxLayout
 
-from spyder.widgets.browser import WebView
+from spyder.widgets.browser import FrameWebView
 
 
-class RenderView(WebView):
+class RenderView(FrameWebView):
 
     def __init__(self, parent):
-        WebView.__init__(self, parent)
+        FrameWebView.__init__(self, parent)
 
 
 class ReportsWidget(QWidget):
@@ -26,6 +26,10 @@ class ReportsWidget(QWidget):
         self.setWindowTitle("Reports")
 
         self.renderview = RenderView(self)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.renderview)
+        self.setLayout(layout)
 
     def set_html(self, html_text, base_url=None):
         """Set html text"""
