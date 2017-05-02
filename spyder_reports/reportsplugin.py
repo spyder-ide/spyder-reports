@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 """Reports Plugin."""
 
-from pweave import Pweb, readers
+from pweave import Pweb
 import codecs
 
 from qtpy.QtCore import QUrl
