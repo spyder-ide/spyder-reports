@@ -1,8 +1,3 @@
-
-
-## Installation
-
-
 Spyder Reports
 ======
 
