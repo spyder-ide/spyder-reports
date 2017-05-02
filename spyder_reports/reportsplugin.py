@@ -81,6 +81,12 @@ class ReportsPlugin(SpyderPluginWidget):
         self.update_html(self.main.editor.get_current_filename())
 
     def update_html(self, file):
+        """
+        Parse report document and dysplays it.
+
+        Args:
+            file: Path of the file to be parsed.
+        """
         doc = Pweb(file)
 
         # TODO Add more formats support
