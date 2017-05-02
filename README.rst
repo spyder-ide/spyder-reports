@@ -18,8 +18,8 @@ Project information
 .. |circleci status| image:: https://img.shields.io/circleci/project/github/spyder-ide/spyder-reports/master.svg
 :target: https://circleci.com/gh/spyder-ide/spyder-reports/tree/master
 :alt: Circle-CI build status
-.. |quantified code| image:: https://www.quantifiedcode.com/api/v1/project/PROJECT_ID/badge.svg
-:target: https://www.quantifiedcode.com/app/project/PROJECT_ID
+.. |quantified code| image:: https://www.quantifiedcode.com/api/v1/project/0d4b34c261b5450db4e74863151f046e/badge.svg
+:target: https://www.quantifiedcode.com/app/project/0d4b34c261b5450db4e74863151f046e
 :alt: Quantified Code issues
 .. |scrutinizer| image:: https://img.shields.io/scrutinizer/g/spyder-ide/spyder-reports.svg
 :target: https://scrutinizer-ci.com/g/spyder-ide/spyder-reports/?branch=master
