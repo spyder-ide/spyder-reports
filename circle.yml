@@ -3,7 +3,7 @@
 machine:
   environment:
     # Python versions to tests (Maximum of 4 different versions)
-    PY_VERSIONS:       “3.6 3.5 3.4 2.7”
+    PY_VERSIONS:       “3.6 3.5”
 
     # Conda variables and aliases for commands
     CMD_LINT_CIOCHECK:  /home/ubuntu/miniconda/envs/lint/bin/ciocheck
