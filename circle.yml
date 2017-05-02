@@ -40,7 +40,7 @@ test:
     - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && ciocheck spyder_reports: # note the colon
         parallel: true
     # Tests
-    - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && python runtests.py: # note the colon
+    - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && pytest spyder_reports: # note the colon
         parallel: true
     # Coveralls
     - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && coveralls: # note the colon
