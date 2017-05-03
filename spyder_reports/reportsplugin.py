@@ -7,8 +7,9 @@
 # -----------------------------------------------------------------------------
 """Reports Plugin."""
 
-from pweave import Pweb, readers
+from pweave import Pweb
 import codecs
+import os.path as osp
 
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
@@ -78,9 +79,31 @@ class ReportsPlugin(SpyderPluginWidget):
     # -------------------------------------------------------------------------
 
     def run_reports_render(self):
-        self.update_html(self.main.editor.get_current_filename())
+        """
+        Call report rendering and displays its output.
+        """
+        editorstack = self.main.editor.get_current_editorstack()
+        if editorstack.save():
+            fname = osp.abspath(self.main.editor.get_current_filename())
+            output_file = self.render_report(fname)
 
-    def update_html(self, file):
+            html = ""
+            with codecs.open(output_file, encoding="utf-8") as f:
+                html = f.read()
+
+            base_url = QUrl()
+            self.report_widget.set_html(html, base_url)
+
+    def render_report(self, file):
+        """
+        Parse report document using pweave.
+
+        Args:
+            file: Path of the file to be parsed.
+
+        Return:
+            Output file path
+        """
         doc = Pweb(file)
 
         # TODO Add more formats support
@@ -99,11 +122,4 @@ class ReportsPlugin(SpyderPluginWidget):
         doc.format()
         doc.write()
 
-        output_file = doc.sink
-
-        html = ""
-        with codecs.open(output_file, encoding="utf-8") as f:
-            html = f.read()
-
-        base_url = QUrl()
-        self.report_widget.set_html(html, base_url)
+        return doc.sink

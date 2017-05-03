@@ -13,6 +13,7 @@ from spyder.widgets.browser import FrameWebView
 
 
 class RenderView(FrameWebView):
+    """Web widget that shows rendered report."""
 
     def __init__(self, parent):
         FrameWebView.__init__(self, parent)
@@ -32,11 +33,12 @@ class ReportsWidget(QWidget):
         self.setLayout(layout)
 
     def set_html(self, html_text, base_url=None):
-        """Set html text"""
+        """Set html text."""
         if base_url is not None:
             self.renderview.setHtml(html_text, base_url)
         else:
             self.renderview.setHtml(html_text)
 
     def clear(self):
+        """Clear widget web view content."""
         self.set_html('')
