@@ -28,7 +28,7 @@ dependencies:
       export PATH="$HOME/miniconda/bin:$PATH" &&
       source activate test &&
       conda install -q ciocheck -c spyder-ide --no-update-deps &&
-      if [ "$CIRCLE_NODE_INDEX" = "0" ]; then pip install -q pyqt5 spyder pweave; else conda install -q spyder; conda install -q -c mpastell pweave; fi &&
+      if [ "$CIRCLE_NODE_INDEX" = "0" ]; then pip install -q pyqt5 spyder pweave; else conda install -q -c spyder-ide spyder pweave; fi &&
       python setup.py install > /dev/null;
     - DISPLAY=:99 /usr/bin/matchbox-window-manager:
         background: true
