@@ -1,0 +1,3 @@
+spyder>=3.1
+pweave
+matplotlib
