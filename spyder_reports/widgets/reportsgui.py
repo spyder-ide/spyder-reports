@@ -18,6 +18,7 @@ class RenderView(FrameWebView):
     """Web widget that shows rendered report."""
 
     def __init__(self, parent):
+        """Initialiaze the WebView."""
         FrameWebView.__init__(self, parent)
 
 
@@ -25,6 +26,7 @@ class ReportsWidget(QWidget):
     """Reports widget."""
 
     def __init__(self, parent):
+        """Initialiaze ReportsWidget."""
         QWidget.__init__(self, parent)
 
         self.setWindowTitle("Reports")

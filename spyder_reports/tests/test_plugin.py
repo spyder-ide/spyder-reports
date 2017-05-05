@@ -29,9 +29,9 @@ def report_mdw_file(tmpdir_factory):
     Returns:
         str: Path of temporary mdw file.
     """
-    p = tmpdir_factory.mktemp('data').join('test_report.mdw')
-    p.write('# This is a Markdown report')
-    return str(p)
+    mdw_file = tmpdir_factory.mktemp('data').join('test_report.mdw')
+    mdw_file.write('# This is a Markdown report')
+    return str(mdw_file)
 
 
 def test_basic_initialization(qtbot):

@@ -6,5 +6,5 @@
 # (see LICENSE.txt for details)
 # -----------------------------------------------------------------------------
 """Version File."""
-version_info = (0, 1, 0, 'dev0')
-__version__ = '.'.join(map(str, version_info))
+VERSION_INFO = (0, 1, 0, 'dev0')
+__version__ = '.'.join(map(str, VERSION_INFO))
