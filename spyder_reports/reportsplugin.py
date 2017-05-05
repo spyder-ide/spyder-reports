@@ -7,21 +7,24 @@
 # -----------------------------------------------------------------------------
 """Reports Plugin."""
 
-from pweave import Pweb
+# Standard library imports
 import codecs
 import os.path as osp
 
+# Third party imports
+from pweave import Pweb
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
+
+# Spyder-IDE and Local imports
+from spyder.utils.qthelpers import create_action
+
+from .widgets.reportsgui import ReportsWidget
 
 try:
     from spyder.api.plugins import SpyderPluginWidget
 except ImportError:
     from spyder.plugins import SpyderPluginWidget  # Spyder 3 compatibility
-
-from spyder.utils.qthelpers import create_action
-
-from .widgets.reportsgui import ReportsWidget
 
 
 class ReportsPlugin(SpyderPluginWidget):

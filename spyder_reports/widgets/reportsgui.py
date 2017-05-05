@@ -7,8 +7,10 @@
 # -----------------------------------------------------------------------------
 """Reports Widget."""
 
-from qtpy.QtWidgets import QWidget, QVBoxLayout
+# Third party imports
+from qtpy.QtWidgets import QVBoxLayout, QWidget
 
+# Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
 
 
@@ -21,6 +23,7 @@ class RenderView(FrameWebView):
 
 class ReportsWidget(QWidget):
     """Reports widget."""
+
     def __init__(self, parent):
         QWidget.__init__(self, parent)
 

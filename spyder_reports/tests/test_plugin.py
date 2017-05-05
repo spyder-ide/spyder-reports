@@ -5,10 +5,10 @@
 #
 """Tests for the plugin."""
 
-# Test library imports
+# Third party imports
 import pytest
 
-# Local imports
+# Spyder-IDE and Local imports
 from spyder_reports.reportsplugin import ReportsPlugin
 
 
