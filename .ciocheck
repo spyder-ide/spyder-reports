@@ -7,7 +7,7 @@ branch = origin/master
 diff_mode = commited
 file_mode = all
 check = pep8,pydocstyle,flake8,pylint,pyformat,isort,yapf
-enforce = flake8,yapf
+enforce = pep8
 
 # Python (pyformat)
 header = # -*- coding: utf-8 -*-
