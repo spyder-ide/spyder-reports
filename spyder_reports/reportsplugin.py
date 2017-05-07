@@ -7,21 +7,24 @@
 # -----------------------------------------------------------------------------
 """Reports Plugin."""
 
-from pweave import Pweb
+# Standard library imports
 import codecs
 import os.path as osp
 
+# Third party imports
+from pweave import Pweb
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
+
+# Spyder-IDE and Local imports
+from spyder.utils.qthelpers import create_action
+
+from .widgets.reportsgui import ReportsWidget
 
 try:
     from spyder.api.plugins import SpyderPluginWidget
 except ImportError:
     from spyder.plugins import SpyderPluginWidget  # Spyder 3 compatibility
-
-from spyder.utils.qthelpers import create_action
-
-from .widgets.reportsgui import ReportsWidget
 
 
 class ReportsPlugin(SpyderPluginWidget):
@@ -31,6 +34,11 @@ class ReportsPlugin(SpyderPluginWidget):
     CONFIGWIDGET_CLASS = None
 
     def __init__(self, parent=None):
+        """
+        Initialize main widget.
+
+        Create a basic layout and add ReportWidget.
+        """
         SpyderPluginWidget.__init__(self, parent)
         self.main = parent  # Spyder 3 compatibility
 
@@ -79,17 +87,15 @@ class ReportsPlugin(SpyderPluginWidget):
     # -------------------------------------------------------------------------
 
     def run_reports_render(self):
-        """
-        Call report rendering and displays its output.
-        """
+        """Call report rendering and displays its output."""
         editorstack = self.main.editor.get_current_editorstack()
         if editorstack.save():
             fname = osp.abspath(self.main.editor.get_current_filename())
             output_file = self.render_report(fname)
 
             html = ""
-            with codecs.open(output_file, encoding="utf-8") as f:
-                html = f.read()
+            with codecs.open(output_file, encoding="utf-8") as file:
+                html = file.read()
 
             base_url = QUrl()
             self.report_widget.set_html(html, base_url)

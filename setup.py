@@ -23,7 +23,7 @@ def get_version(module='spyder_reports'):
         data = f.read()
     lines = data.split('\n')
     for line in lines:
-        if line.startswith('version_info'):
+        if line.startswith('VERSION_INFO'):
             version_tuple = ast.literal_eval(line.split('=')[-1].strip())
             version = '.'.join(map(str, version_tuple))
             break
