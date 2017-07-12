@@ -45,6 +45,13 @@ class ReportsWidget(QWidget):
     def set_html(self, html_text, name, base_url=None):
         """Set html text."""
         renderview = self.renderviews.get(name)
+
+        if 'Welcome' in self.renderviews:
+            # Overwrite the welcome tab
+            renderview =self.renderviews.pop('Welcome')
+            self.renderviews[name] = renderview
+            self.tabs.setTabText(0, name)
+
         if renderview is None:
             # create a new renderview
             renderview = RenderView(self)
