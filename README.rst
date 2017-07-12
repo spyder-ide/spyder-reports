@@ -45,3 +45,5 @@ Using pip
 Overview
 --------
 
+.. image:: doc/reports_screenshot.png
+   :alt: Reports Screenshot
