@@ -40,5 +40,22 @@ def test_overwrite_welcome(qtbot):
     assert reports.renderviews['file name'] == renderview
 
 
+def test_open_several_tabs(qtbot):
+    """Test behaviour when opening several tabs."""
+    reports = setup_reports(qtbot)
+
+    reports.set_html('some html', 'file1')
+    reports.set_html('some html', 'file2')
+    assert reports.tabs.currentIndex() == 1
+    assert reports.tabs.count() == 2
+
+    # when re-rendering 'file1' should change to tab 0
+    reports.set_html('some html', 'file1')
+    assert reports.tabs.currentIndex() == 0
+
+    # It shouldn't open a new tab because the file was already rendered
+    assert reports.tabs.count() == 2
+
+
 if __name__ == "__main__":
     pytest.main()
