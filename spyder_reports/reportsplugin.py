@@ -91,7 +91,8 @@ class ReportsPlugin(SpyderPluginWidget):
         if editorstack.save():
             fname = osp.abspath(self.main.editor.get_current_filename())
             output_file = self.render_report(fname)
-
+            if output_file is None:
+                return
             html = ""
             with codecs.open(output_file, encoding="utf-8") as file:
                 html = file.read()
