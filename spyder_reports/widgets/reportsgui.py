@@ -33,6 +33,8 @@ class ReportsWidget(QWidget):
 
         self.tabs = QTabWidget()
         self.tabs.setMovable(True)
+        self.tabs.setTabsClosable(True)
+        self.tabs.tabCloseRequested.connect(self.close_tab)
 
         self.renderviews = {}
 
@@ -64,6 +66,12 @@ class ReportsWidget(QWidget):
             renderview.setHtml(html_text)
 
         self.tabs.setCurrentWidget(renderview)
+
+    def close_tab(self, index):
+        "Close tab, and remove its widget form renderviews."
+        self.renderviews.pop(self.tabs.tabText(index))
+        self.tabs.removeTab(index)
+
 
     def clear_all(self):
         """Clear widget web view content."""
