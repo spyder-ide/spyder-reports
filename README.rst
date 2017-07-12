@@ -42,6 +42,15 @@ Using pip
 ``pip install spyder-reports``
 
 
+Dependencies
+------------
+
+This project depends on:
+
+* `Spyder <https://github.com/spyder-ide/spyder>`_ >= 3.2
+* `Pweave <https://github.com/mpastell/Pweave>`_
+
+
 Overview
 --------
 
