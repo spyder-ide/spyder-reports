@@ -100,6 +100,8 @@ class ReportsPlugin(SpyderPluginWidget):
             name = osp.basename(output_file)
             self.report_widget.set_html(html, name, base_url)
 
+        self.switch_to_plugin()
+
     def render_report(self, file):
         """
         Parse report document using pweave.

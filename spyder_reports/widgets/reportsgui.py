@@ -56,6 +56,8 @@ class ReportsWidget(QWidget):
         else:
             renderview.setHtml(html_text)
 
+        self.tabs.setCurrentWidget(renderview)
+
     def clear_all(self):
         """Clear widget web view content."""
         for name in self.renderviews:
