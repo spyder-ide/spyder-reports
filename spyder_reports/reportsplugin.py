@@ -44,7 +44,6 @@ class ReportsPlugin(SpyderPluginWidget):
 
         # Create widget and add to dockwindow
         self.report_widget = ReportsWidget(self.main)
-        self.report_widget.clear()
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
@@ -98,7 +97,8 @@ class ReportsPlugin(SpyderPluginWidget):
                 html = file.read()
 
             base_url = QUrl()
-            self.report_widget.set_html(html, base_url)
+            name = osp.basename(output_file)
+            self.report_widget.set_html(html, name, base_url)
 
     def render_report(self, file):
         """
