@@ -8,7 +8,7 @@
 """Reports Widget."""
 
 # Third party imports
-from qtpy.QtWidgets import QVBoxLayout, QWidget
+from qtpy.QtWidgets import QVBoxLayout, QWidget, QTabWidget
 
 # Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
@@ -31,19 +31,49 @@ class ReportsWidget(QWidget):
 
         self.setWindowTitle("Reports")
 
-        self.renderview = RenderView(self)
+        self.tabs = QTabWidget()
+        self.tabs.setMovable(True)
+        self.tabs.setTabsClosable(True)
+        self.tabs.tabCloseRequested.connect(self.close_tab)
+
+        self.renderviews = {}
 
         layout = QVBoxLayout()
-        layout.addWidget(self.renderview)
+        layout.addWidget(self.tabs)
         self.setLayout(layout)
 
-    def set_html(self, html_text, base_url=None):
-        """Set html text."""
-        if base_url is not None:
-            self.renderview.setHtml(html_text, base_url)
-        else:
-            self.renderview.setHtml(html_text)
+        self.set_html('', 'Welcome')
 
-    def clear(self):
+    def set_html(self, html_text, name, base_url=None):
+        """Set html text."""
+        renderview = self.renderviews.get(name)
+
+        if 'Welcome' in self.renderviews:
+            # Overwrite the welcome tab
+            renderview =self.renderviews.pop('Welcome')
+            self.renderviews[name] = renderview
+            self.tabs.setTabText(0, name)
+
+        if renderview is None:
+            # create a new renderview
+            renderview = RenderView(self)
+            self.renderviews[name] = renderview
+            self.tabs.addTab(renderview, name)
+
+        if base_url is not None:
+            renderview.setHtml(html_text, base_url)
+        else:
+            renderview.setHtml(html_text)
+
+        self.tabs.setCurrentWidget(renderview)
+
+    def close_tab(self, index):
+        "Close tab, and remove its widget form renderviews."
+        self.renderviews.pop(self.tabs.tabText(index))
+        self.tabs.removeTab(index)
+
+
+    def clear_all(self):
         """Clear widget web view content."""
-        self.set_html('')
+        for name in self.renderviews:
+            self.set_html('', name)
