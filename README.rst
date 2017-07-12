@@ -39,7 +39,7 @@ Using conda
 
 Using pip
 
-``pip install spyder_reports``
+``pip install spyder-reports``
 
 
 Overview
