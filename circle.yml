@@ -28,7 +28,6 @@ dependencies:
       git clone git://github.com/astropy/ci-helpers.git > /dev/null &&
       source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh &&
       export PATH="$HOME/miniconda/bin:$PATH" &&
-      source activate test && conda config --add channels conda-forge &&
       conda install -q ciocheck -c spyder-ide --no-update-deps &&
       if [ "$CIRCLE_NODE_INDEX" = "0" ]; then pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 spyder matplotlib && pip install git+ssh://git@github.com/mpastell/Pweave.git;
       else conda install -c spyder-ide -q -c spyder-ide --file requirements.txt; fi &&
