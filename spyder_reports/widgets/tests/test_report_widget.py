@@ -85,7 +85,7 @@ def test_close_tabs(qtbot):
     reports = setup_reports(qtbot)
 
     def close_tab(index):
-        """Find the close button and click it"""
+        """Find the close button and click it."""
         for i in [0, 1]:  # LeftSide, RightSide
             close_button = reports.tabs.tabBar().tabButton(index, i)
             if close_button:
