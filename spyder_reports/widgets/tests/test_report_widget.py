@@ -8,9 +8,28 @@
 # Third party imports
 import pytest
 from qtpy.QtCore import Qt
+from qtpy.QtWebEngineWidgets import WEBENGINE
 
 # Spyder-IDE and Local imports
 from spyder_reports.widgets.reportsgui import ReportsWidget
+
+
+def same_html(widget, html):
+    """
+    Check if certain html content is exactly the same in a
+    web widget.
+    """
+    if WEBENGINE:
+        def callback(data):
+            global HTML
+            HTML = data
+        widget.toHtml(callback)
+        try:
+            return html == HTML
+        except NameError:
+            return False
+    else:
+        return html == widget.mainFrame().toHtml()
 
 
 @pytest.fixture
@@ -95,7 +114,8 @@ def test_set_html(qtbot):
     reports.set_html(html, 'file1')
 
     renderviews = reports.renderviews.get('file1')
-    assert html == renderviews.page().mainFrame().toHtml()
+    qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
+    assert same_html(renderviews.page(), html)
 
 
 def test_set_html_from_file(qtbot, tmpdir_factory):
@@ -110,7 +130,8 @@ def test_set_html_from_file(qtbot, tmpdir_factory):
     reports.set_html_from_file(str(html_file))
 
     renderviews = reports.renderviews.get('test_report.html')
-    assert html == renderviews.page().mainFrame().toHtml()
+    qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
+    assert same_html(renderviews.page(), html)
 
 
 if __name__ == "__main__":
