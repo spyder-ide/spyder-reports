@@ -10,9 +10,11 @@
 # Standard library imports
 import codecs
 import os.path as osp
+import shutil
+import tempfile
 
 # Third party imports
-from pweave import Pweb
+from pweave import Pweb, __version__ as pweave_version
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
 
@@ -75,6 +77,17 @@ class ReportsPlugin(SpyderPluginWidget):
 
         self.main.run_menu_actions += [reports_act]
 
+        # Render welcome.md in a temp location
+        welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
+        temp_welcome = osp.join(tempfile.gettempdir(), 'welcome.md')
+        shutil.copy(welcome_path, temp_welcome)
+        self.render_report(temp_welcome)
+
+        # Set generated html in page
+        html_path, _ = osp.splitext(temp_welcome)
+        html_path = html_path + '.html'
+        self.report_widget.set_html_from_file(html_path)
+
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
         self.main.tabify_plugins(self.main.help, self)
@@ -93,13 +106,7 @@ class ReportsPlugin(SpyderPluginWidget):
             output_file = self.render_report(fname)
             if output_file is None:
                 return
-            html = ""
-            with codecs.open(output_file, encoding="utf-8") as file:
-                html = file.read()
-
-            base_url = QUrl()
-            name = osp.basename(output_file)
-            self.report_widget.set_html(html, name, base_url)
+            self.report_widget.set_html_from_file(output_file)
 
         self.switch_to_plugin()
 
@@ -117,18 +124,24 @@ class ReportsPlugin(SpyderPluginWidget):
 
         # TODO Add more formats support
         if doc.file_ext == '.mdw':
-            doc.setformat('md2html', theme="skeleton")
+            _format = 'md2html'
         elif doc.file_ext == '.md':
-            doc.setformat('pandoc2html')
+            _format = 'pandoc2html'
         else:
             print("Format not supported ({})".format(doc.file_ext))
             return
 
-        doc.detect_reader()
-
-        doc.parse()
-        doc.run(shell="ipython")
-        doc.format()
-        doc.write()
-
-        return doc.sink
+        if pweave_version.startswith('0.3'):
+            doc.read()
+            doc.run()
+            doc.format(doctype=_format)
+            doc.write()
+            return doc.sink
+        else:
+            doc.setformat(_format)
+            doc.detect_reader()
+            doc.parse()
+            doc.run(shell="ipython")
+            doc.format()
+            doc.write()
+            return doc.sink

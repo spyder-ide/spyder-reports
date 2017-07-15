@@ -7,7 +7,12 @@
 # -----------------------------------------------------------------------------
 """Reports Widget."""
 
+# Standard library imports
+import codecs
+import os.path as osp
+
 # Third party imports
+from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QTabWidget
 
 # Spyder-IDE and Local imports
@@ -48,9 +53,9 @@ class ReportsWidget(QWidget):
         """Set html text."""
         renderview = self.renderviews.get(name)
 
-        if 'Welcome' in self.renderviews:
+        if 'Welcome' in self.renderviews and renderview is None:
             # Overwrite the welcome tab
-            renderview =self.renderviews.pop('Welcome')
+            renderview = self.renderviews.pop('Welcome')
             self.renderviews[name] = renderview
             self.tabs.setTabText(0, name)
 
@@ -67,11 +72,20 @@ class ReportsWidget(QWidget):
 
         self.tabs.setCurrentWidget(renderview)
 
+    def set_html_from_file(self, filename):
+        """Set html text from a file."""
+        html = ""
+        with codecs.open(filename, encoding="utf-8") as file:
+            html = file.read()
+
+        base_url = QUrl()
+        name = osp.basename(filename)
+        self.set_html(html, name, base_url)
+
     def close_tab(self, index):
-        "Close tab, and remove its widget form renderviews."
+        """Close tab, and remove its widget form renderviews."""
         self.renderviews.pop(self.tabs.tabText(index))
         self.tabs.removeTab(index)
-
 
     def clear_all(self):
         """Clear widget web view content."""

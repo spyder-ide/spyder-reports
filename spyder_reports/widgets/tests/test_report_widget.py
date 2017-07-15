@@ -8,9 +8,25 @@
 # Third party imports
 import pytest
 from qtpy.QtCore import Qt
+from qtpy.QtWebEngineWidgets import WEBENGINE
 
 # Spyder-IDE and Local imports
 from spyder_reports.widgets.reportsgui import ReportsWidget
+
+
+def same_html(widget, html):
+    """Check if certain html content is exactly the same in a web widget."""
+    if WEBENGINE:
+        def callback(data):
+            global HTML
+            HTML = data
+        widget.toHtml(callback)
+        try:
+            return html == HTML
+        except NameError:
+            return False
+    else:
+        return html == widget.mainFrame().toHtml()
 
 
 @pytest.fixture
@@ -28,7 +44,9 @@ def test_reports(qtbot):
 
 
 def test_overwrite_welcome(qtbot):
-    """Test taht the first rendering doesn't create a new tab.
+    """
+    Test that the first rendering doesn't create a new tab.
+
     It should overwrite 'Welcome' tab instead.
     """
     reports = setup_reports(qtbot)
@@ -59,13 +77,15 @@ def test_open_several_tabs(qtbot):
 
 
 def test_close_tabs(qtbot):
-    """Test closing tabs.
+    """
+    Test closing tabs.
+
     When a tab is closed also the reference to the renderview should be removed.
     """
     reports = setup_reports(qtbot)
 
     def close_tab(index):
-        """Find the close button and click it"""
+        """Find the close button and click it."""
         for i in [0, 1]:  # LeftSide, RightSide
             close_button = reports.tabs.tabBar().tabButton(index, i)
             if close_button:
@@ -85,6 +105,34 @@ def test_close_tabs(qtbot):
     close_tab(0)
     assert reports.tabs.count() == 0
     assert reports.renderviews.get('file1') is None
+
+
+def test_set_html(qtbot):
+    """Test set html."""
+    reports = setup_reports(qtbot)
+
+    html = "<html><head></head><body>some html</body></html>"
+    reports.set_html(html, 'file1')
+
+    renderviews = reports.renderviews.get('file1')
+    qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
+    assert same_html(renderviews.page(), html)
+
+
+def test_set_html_from_file(qtbot, tmpdir_factory):
+    """Test seting a html from a file."""
+    reports = setup_reports(qtbot)
+
+    # Create html file
+    html = "<html><head></head><body>some html</body></html>"
+    html_file = tmpdir_factory.mktemp('data').join('test_report.html')
+    html_file.write(html)
+
+    reports.set_html_from_file(str(html_file))
+
+    renderviews = reports.renderviews.get('test_report.html')
+    qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
+    assert same_html(renderviews.page(), html)
 
 
 if __name__ == "__main__":

@@ -54,6 +54,7 @@ setup(
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=REQUIREMENTS,
+    package_data={'spyder_reports.utils': ['*.md']},
     classifiers=[
         'Development Status :: 1 - Planning',
         'Intended Audience :: Developers',
