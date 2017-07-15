@@ -81,7 +81,6 @@ class ReportsPlugin(SpyderPluginWidget):
             self.render_report(path + '.md')
         self.report_widget.set_html_from_file(welcome_path)
 
-
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
         self.main.tabify_plugins(self.main.help, self)
@@ -139,5 +138,3 @@ class ReportsPlugin(SpyderPluginWidget):
             doc.format()
             doc.write()
             return doc.sink
-
-

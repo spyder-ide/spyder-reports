@@ -15,10 +15,7 @@ from spyder_reports.widgets.reportsgui import ReportsWidget
 
 
 def same_html(widget, html):
-    """
-    Check if certain html content is exactly the same in a
-    web widget.
-    """
+    """Check if certain html content is exactly the same in a web widget."""
     if WEBENGINE:
         def callback(data):
             global HTML
@@ -47,7 +44,9 @@ def test_reports(qtbot):
 
 
 def test_overwrite_welcome(qtbot):
-    """Test taht the first rendering doesn't create a new tab.
+    """
+    Test that the first rendering doesn't create a new tab.
+
     It should overwrite 'Welcome' tab instead.
     """
     reports = setup_reports(qtbot)
@@ -78,7 +77,9 @@ def test_open_several_tabs(qtbot):
 
 
 def test_close_tabs(qtbot):
-    """Test closing tabs.
+    """
+    Test closing tabs.
+
     When a tab is closed also the reference to the renderview should be removed.
     """
     reports = setup_reports(qtbot)
