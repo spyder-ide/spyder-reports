@@ -12,7 +12,7 @@ import codecs
 import os.path as osp
 
 # Third party imports
-from pweave import Pweb
+from pweave import Pweb, __version__
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
 
@@ -118,18 +118,26 @@ class ReportsPlugin(SpyderPluginWidget):
 
         # TODO Add more formats support
         if doc.file_ext == '.mdw':
-            doc.setformat('md2html', theme="skeleton")
+            _format = 'md2html'
         elif doc.file_ext == '.md':
-            doc.setformat('pandoc2html')
+            _format = 'pandoc2html'
         else:
             print("Format not supported ({})".format(doc.file_ext))
             return
 
-        doc.detect_reader()
+        if __version__.startswith('0.3'):
+            doc.read()
+            doc.run(shell="ipython")
+            doc.format(doctype=_format)
+            doc.write()
+            return doc.sink
+        else:
+            doc.setformat(_format)
+            doc.detect_reader()
+            doc.parse()
+            doc.run(shell="ipython")
+            doc.format()
+            doc.write()
+            return doc.sink
 
-        doc.parse()
-        doc.run(shell="ipython")
-        doc.format()
-        doc.write()
 
-        return doc.sink
