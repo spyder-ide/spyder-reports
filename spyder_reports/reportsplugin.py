@@ -10,6 +10,8 @@
 # Standard library imports
 import codecs
 import os.path as osp
+import shutil
+import tempfile
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
@@ -75,11 +77,16 @@ class ReportsPlugin(SpyderPluginWidget):
 
         self.main.run_menu_actions += [reports_act]
 
-        welcome_path = osp.join(osp.dirname(__file__), 'utils/welcome.html')
-        if not osp.exists(welcome_path):
-            path, ext = osp.splitext(welcome_path)
-            self.render_report(path + '.md')
-        self.report_widget.set_html_from_file(welcome_path)
+        # Render welcome.md in a temp location
+        welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
+        temp_welcome = osp.join(tempfile.gettempdir(), 'welcome.md')
+        shutil.copy(welcome_path, temp_welcome)
+        self.render_report(temp_welcome)
+
+        # Set generated html in page
+        html_path, _ = osp.splitext(temp_welcome)
+        html_path = html_path + '.html'
+        self.report_widget.set_html_from_file(html_path)
 
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
