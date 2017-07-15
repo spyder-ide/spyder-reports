@@ -93,13 +93,7 @@ class ReportsPlugin(SpyderPluginWidget):
             output_file = self.render_report(fname)
             if output_file is None:
                 return
-            html = ""
-            with codecs.open(output_file, encoding="utf-8") as file:
-                html = file.read()
-
-            base_url = QUrl()
-            name = osp.basename(output_file)
-            self.report_widget.set_html(html, name, base_url)
+            self.report_widget.set_html_from_file(output_file)
 
         self.switch_to_plugin()
 
