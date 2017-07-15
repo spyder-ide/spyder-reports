@@ -21,18 +21,7 @@ dependencies:
     # See https://github.com/TestFX/TestFX/issues/158#issuecomment-62421691
     - sudo apt-get install matchbox-window-manager
   override:
-    # First convert PY_VERSIONS to an array and then select the python version based on the CIRCLE_NODE_INDEX
-    - export PY_VERSIONS=($PY_VERSIONS) &&
-      export TRAVIS_PYTHON_VERSION=${PY_VERSIONS[$CIRCLE_NODE_INDEX]} &&
-      echo -e "PYTHON = $TRAVIS_PYTHON_VERSION \n============" &&
-      git clone git://github.com/astropy/ci-helpers.git > /dev/null &&
-      source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh &&
-      export PATH="$HOME/miniconda/bin:$PATH" &&
-      conda install -q ciocheck -c spyder-ide --no-update-deps &&
-      if [ "$CIRCLE_NODE_INDEX" = "0" ]; then pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 spyder matplotlib && pip install git+ssh://git@github.com/mpastell/Pweave.git;
-      else conda install -c spyder-ide -q -c spyder-ide --file requirements.txt; fi &&
-
-      python setup.py install > /dev/null;
+    - ./ci/install.sh
     - DISPLAY=:99 /usr/bin/matchbox-window-manager:
         background: true
     - sleep 5
