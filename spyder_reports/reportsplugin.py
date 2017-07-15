@@ -12,7 +12,7 @@ import codecs
 import os.path as osp
 
 # Third party imports
-from pweave import Pweb, __version__
+from pweave import Pweb, __version__ as pweave_version
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
 
@@ -125,9 +125,9 @@ class ReportsPlugin(SpyderPluginWidget):
             print("Format not supported ({})".format(doc.file_ext))
             return
 
-        if __version__.startswith('0.3'):
+        if pweave_version.startswith('0.3'):
             doc.read()
-            doc.run(shell="ipython")
+            doc.run()
             doc.format(doctype=_format)
             doc.write()
             return doc.sink
