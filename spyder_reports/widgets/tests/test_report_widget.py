@@ -87,5 +87,31 @@ def test_close_tabs(qtbot):
     assert reports.renderviews.get('file1') is None
 
 
+def test_set_html(qtbot):
+    """Test set html."""
+    reports = setup_reports(qtbot)
+
+    html = "<html><head></head><body>some html</body></html>"
+    reports.set_html(html, 'file1')
+
+    renderviews = reports.renderviews.get('file1')
+    assert html == renderviews.page().mainFrame().toHtml()
+
+
+def test_set_html_from_file(qtbot, tmpdir_factory):
+    """Test seting a html from a file."""
+    reports = setup_reports(qtbot)
+
+    # Create html file
+    html = "<html><head></head><body>some html</body></html>"
+    html_file = tmpdir_factory.mktemp('data').join('test_report.html')
+    html_file.write(html)
+
+    reports.set_html_from_file(str(html_file))
+
+    renderviews = reports.renderviews.get('test_report.html')
+    assert html == renderviews.page().mainFrame().toHtml()
+
+
 if __name__ == "__main__":
     pytest.main()
