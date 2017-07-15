@@ -2,6 +2,6 @@
 
 # Usage
 
-Reports plugin supports render reports files (mdw and md) using [Pweave](http://mpastell.com/pweave/)
+In this panel you can see the rendered output of report files, i.e: Markdown files or files with the **mdw** extension, that contain code, text, mathematical equations and graphics. It uses the the [Pweave](http://mpastell.com/pweave/) project to generate the reports.
 
 Use _Run > Render report to HTML_ to render a report
