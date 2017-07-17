@@ -14,10 +14,10 @@ source activate test
 conda install -q ciocheck -c spyder-ide --no-update-deps
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-    pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 spyder matplotlib
+    pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 spyder>=3.2 matplotlib
     pip install git+ssh://git@github.com/mpastell/Pweave.git
 else
-    conda install -q spyder matplotlib
+    conda install -q "spyder>=3.2" matplotlib
     pip install -q pweave
 fi
 

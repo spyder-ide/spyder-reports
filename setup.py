@@ -37,7 +37,7 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['spyder', 'pweave']
+REQUIREMENTS = ['spyder>=3.2', 'pweave']
 
 
 setup(
