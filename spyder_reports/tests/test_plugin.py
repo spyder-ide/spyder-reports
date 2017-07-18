@@ -45,7 +45,7 @@ def test_basic_initialization(qtbot):
 def test_basic_md_render(qtbot, report_mdw_file):
     """Test rendering of an basic .mdw report returning a .html file."""
     reports = setup_reports(qtbot)
-    output_file = reports.render_report(report_mdw_file)
+    output_file = reports._render_report(report_mdw_file)
 
     # Assert that output_file is an html file
     assert output_file.split('.')[-1] == 'html'
