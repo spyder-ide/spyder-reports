@@ -101,6 +101,7 @@ class ReportsPlugin(SpyderPluginWidget):
     def check_compatibility(self):
         """
         Check plugin requirements.
+
         - python version is greater or equal to 3.
         - PyQt version is greater or equal to 5.
         """

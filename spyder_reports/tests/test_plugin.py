@@ -52,6 +52,7 @@ def test_basic_md_render(qtbot, report_mdw_file):
 
 
 def test_check_compability(qtbot, monkeypatch):
+    """Test state and message returned by check_compatibility."""
     monkeypatch.setattr('spyder_reports.reportsplugin.PYQT4', True)
     monkeypatch.setattr('spyder_reports.reportsplugin.PY3', False)
 
