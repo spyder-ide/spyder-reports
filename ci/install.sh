@@ -21,10 +21,13 @@ else
     pip install -q pweave
 fi
 
+# Bring spyder dependendencies (install/uninstall spyder)
+conda install -q spyder
+conda remove -q -y spyder
+
 mkdir spyder-source && cd spyder-source
 wget -q https://github.com/spyder-ide/spyder/archive/3.x.zip && unzip -q 3.x.zip
 cd spyder-3.x
-conda install --file requirements/requirements.txt
 python setup.py install > /dev/null
 
 # Come back to the initial parent directory and install spyder-reports
