@@ -14,11 +14,19 @@ source activate test
 conda install -q ciocheck -c spyder-ide --no-update-deps
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-    pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 spyder>=3.2 matplotlib
+    pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 matplotlib
     pip install git+ssh://git@github.com/mpastell/Pweave.git
 else
-    conda install -q "spyder>=3.2" matplotlib
+    conda install -q matplotlib
     pip install -q pweave
 fi
 
+mkdir spyder-source && cd spyder-source
+wget -q https://github.com/spyder-ide/spyder/archive/3.x.zip && unzip -q 3.x.zip
+cd spyder-3.x
+conda install --file requirements/requirements.txt
+python setup.py install > /dev/null
+
+# Come back to the initial parent directory and install spyder-reports
+cd ../../
 python setup.py install --single-version-externally-managed --record=record.txt > /dev/null
