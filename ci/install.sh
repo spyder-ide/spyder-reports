@@ -13,6 +13,7 @@ source activate test
 
 conda install -q ciocheck -c spyder-ide --no-update-deps
 
+# Install dependencies
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
     pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 matplotlib
     pip install git+ssh://git@github.com/mpastell/Pweave.git
@@ -21,10 +22,16 @@ else
     pip install -q pweave
 fi
 
-# Bring spyder dependendencies (install/uninstall spyder)
-conda install -q spyder
-conda remove -q -y spyder
+# Bring Spyder dependencies (install/uninstall Spyder)
+if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
+    pip install -q spyder
+    pip uninstall -q -y spyder
+else
+    conda install -q spyder
+    conda remove -q -y spyder
+fi
 
+# Install Spyder from the 3.x branch
 mkdir spyder-source && cd spyder-source
 wget -q https://github.com/spyder-ide/spyder/archive/3.x.zip && unzip -q 3.x.zip
 cd spyder-3.x
