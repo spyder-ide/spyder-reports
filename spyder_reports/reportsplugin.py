@@ -15,11 +15,13 @@ import tempfile
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
+from qtpy import PYQT4, PYSIDE
 from qtpy.QtCore import QUrl
 from qtpy.QtWidgets import QVBoxLayout
 
 # Spyder-IDE and Local imports
 from spyder.utils.qthelpers import create_action
+from spyder.py3compat import PY3
 
 from .widgets.reportsgui import ReportsWidget
 
@@ -95,6 +97,23 @@ class ReportsPlugin(SpyderPluginWidget):
     def apply_plugin_settings(self, options):
         """Apply configuration file's plugin settings."""
         pass
+
+    def check_compatibility(self):
+        """
+        Check plugin requirements.
+
+        - python version is greater or equal to 3.
+        - PyQt version is greater or equal to 5.
+        """
+        messages = []
+        valid = True
+        if not PY3:
+            messages.append('Spyder-reports does not work with Python2')
+            valid = False
+        if PYQT4 or PYSIDE:
+            messages.append('Spyder-reports does not work with Qt4')
+            valid = False
+        return valid, ", ".join(messages)
 
     # -------------------------------------------------------------------------
 

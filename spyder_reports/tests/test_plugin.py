@@ -51,5 +51,18 @@ def test_basic_md_render(qtbot, report_mdw_file):
     assert output_file.split('.')[-1] == 'html'
 
 
+def test_check_compability(qtbot, monkeypatch):
+    """Test state and message returned by check_compatibility."""
+    monkeypatch.setattr('spyder_reports.reportsplugin.PYQT4', True)
+    monkeypatch.setattr('spyder_reports.reportsplugin.PY3', False)
+
+    reports = setup_reports(qtbot)
+
+    valid, message = reports.check_compatibility()
+    assert not valid
+    assert 'qt4' in message.lower()
+    assert 'python2' in message.lower()
+
+
 if __name__ == "__main__":
     pytest.main()
