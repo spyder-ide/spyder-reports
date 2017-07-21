@@ -15,7 +15,7 @@ import tempfile
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
 from qtpy import PYQT4, PYSIDE
-from qtpy.QtCore import Qt
+from qtpy.QtCore import Qt, Signal
 from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
@@ -36,6 +36,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
     CONF_SECTION = 'reports'
     CONFIGWIDGET_CLASS = None
+    sig_render_finished = Signal()
 
     def __init__(self, parent=None):
         """
@@ -146,6 +147,7 @@ class ReportsPlugin(SpyderPluginWidget):
                 self.report_widget.set_html_from_file(output_file)
             else:
                 self.show_error_message(error)
+            self.sig_render_finished.emit()
 
         # Before starting a new worker process make sure to end previous
         # incarnations
