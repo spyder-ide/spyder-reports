@@ -141,8 +141,9 @@ class ReportsPlugin(SpyderPluginWidget):
         self.switch_to_plugin()
 
     def render_report_thread(self, file_name):
-
+        """Render report in a thread and update the widget when finished."""
         def worker_output(worker, output_file, error):
+            """Receive the worker output, and update the widget."""
             if error is None and output_file:
                 self.report_widget.set_html_from_file(output_file)
             else:
