@@ -8,7 +8,6 @@
 """Reports Plugin."""
 
 # Standard library imports
-import codecs
 import os.path as osp
 import shutil
 import tempfile
@@ -16,12 +15,13 @@ import tempfile
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
 from qtpy import PYQT4, PYSIDE
-from qtpy.QtCore import QUrl
-from qtpy.QtWidgets import QVBoxLayout
+from qtpy.QtCore import Qt, Signal
+from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
 from spyder.utils.qthelpers import create_action
 from spyder.py3compat import PY3
+from spyder.utils.workers import WorkerManager
 
 from .widgets.reportsgui import ReportsWidget
 
@@ -36,6 +36,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
     CONF_SECTION = 'reports'
     CONFIGWIDGET_CLASS = None
+    sig_render_finished = Signal()
 
     def __init__(self, parent=None):
         """
@@ -51,6 +52,10 @@ class ReportsPlugin(SpyderPluginWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
+
+        # This worker runs in a thread to avoid blocking when rendering
+        # a report
+        self._worker_manager = WorkerManager()
 
         # Initialize plugin
         self.initialize_plugin()
@@ -83,7 +88,7 @@ class ReportsPlugin(SpyderPluginWidget):
         welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
         temp_welcome = osp.join(tempfile.gettempdir(), 'welcome.md')
         shutil.copy(welcome_path, temp_welcome)
-        self.render_report(temp_welcome)
+        self.render_report_thread(temp_welcome)
 
         # Set generated html in page
         html_path, _ = osp.splitext(temp_welcome)
@@ -117,19 +122,46 @@ class ReportsPlugin(SpyderPluginWidget):
 
     # -------------------------------------------------------------------------
 
+    def show_error_message(self, message):
+        """Show error message."""
+        messageBox = QMessageBox(self)
+        messageBox.setWindowModality(Qt.NonModal)
+        messageBox.setAttribute(Qt.WA_DeleteOnClose)
+        messageBox.setWindowTitle('Render Report Error')
+        messageBox.setText(message)
+        messageBox.setStandardButtons(QMessageBox.Ok)
+        messageBox.show()
+
     def run_reports_render(self):
         """Call report rendering and displays its output."""
         editorstack = self.main.editor.get_current_editorstack()
         if editorstack.save():
             fname = osp.abspath(self.main.editor.get_current_filename())
-            output_file = self.render_report(fname)
-            if output_file is None:
-                return
-            self.report_widget.set_html_from_file(output_file)
-
+            self.render_report_thread(fname)
         self.switch_to_plugin()
 
-    def render_report(self, file):
+    def render_report_thread(self, file_name):
+        """Render report in a thread and update the widget when finished."""
+        def worker_output(worker, output_file, error):
+            """Receive the worker output, and update the widget."""
+            if error is None and output_file:
+                self.report_widget.set_html_from_file(output_file)
+            else:
+                self.show_error_message(error)
+            self.sig_render_finished.emit()
+
+        # Before starting a new worker process make sure to end previous
+        # incarnations
+        self._worker_manager.terminate_all()
+
+        worker = self._worker_manager.create_python_worker(
+            self._render_report,
+            file_name,
+        )
+        worker.sig_finished.connect(worker_output)
+        worker.start()
+
+    def _render_report(self, file):
         """
         Parse report document using pweave.
 

@@ -7,6 +7,7 @@
 
 # Third party imports
 import pytest
+from qtpy.QtWebEngineWidgets import WEBENGINE
 
 # Spyder-IDE and Local imports
 from spyder_reports.reportsplugin import ReportsPlugin
@@ -45,7 +46,7 @@ def test_basic_initialization(qtbot):
 def test_basic_md_render(qtbot, report_mdw_file):
     """Test rendering of an basic .mdw report returning a .html file."""
     reports = setup_reports(qtbot)
-    output_file = reports.render_report(report_mdw_file)
+    output_file = reports._render_report(report_mdw_file)
 
     # Assert that output_file is an html file
     assert output_file.split('.')[-1] == 'html'
@@ -62,6 +63,17 @@ def test_check_compability(qtbot, monkeypatch):
     assert not valid
     assert 'qt4' in message.lower()
     assert 'python2' in message.lower()
+
+
+def test_render_report_thread(qtbot, report_mdw_file):
+    """Test rendering report in a worker thread."""
+    reports = setup_reports(qtbot)
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+        reports.render_report_thread(report_mdw_file)
+
+    renderview = reports.report_widget.renderviews.get('test_report.html')
+    assert renderview is not None
 
 
 if __name__ == "__main__":
