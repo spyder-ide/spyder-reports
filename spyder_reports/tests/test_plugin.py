@@ -69,7 +69,7 @@ def test_render_report_thread(qtbot, report_mdw_file):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=1000):
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
         reports.render_report_thread(report_mdw_file)
 
     renderview = reports.report_widget.renderviews.get('test_report.html')
