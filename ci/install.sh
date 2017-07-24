@@ -12,6 +12,7 @@ export PATH="$HOME/miniconda/bin:$PATH"
 source activate test
 
 conda install -q ciocheck -c spyder-ide --no-update-deps
+conda install -q pandoc
 
 # Install dependencies
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
