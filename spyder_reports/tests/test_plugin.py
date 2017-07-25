@@ -76,5 +76,16 @@ def test_render_report_thread(qtbot, report_mdw_file):
     assert renderview is not None
 
 
+def test_render_report_thread_error(qtbot):
+    """Test rendering report in a worker thread."""
+    reports = setup_reports(qtbot)
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+        reports.render_report_thread('file_that_doesnt_exist.mdw')
+
+    renderview = reports.report_widget.renderviews.get('file_that_doesnt_exist.html')
+    assert renderview is None
+
+
 if __name__ == "__main__":
     pytest.main()
