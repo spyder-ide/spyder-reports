@@ -49,6 +49,7 @@ This project depends on:
 
 * `Spyder <https://github.com/spyder-ide/spyder>`_ >= 3.2
 * `Pweave <https://github.com/mpastell/Pweave>`_
+* `Pandoc <https://github.com/jgm/pandoc>`_
 
 
 Overview
