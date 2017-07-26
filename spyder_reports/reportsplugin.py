@@ -90,11 +90,6 @@ class ReportsPlugin(SpyderPluginWidget):
         shutil.copy(welcome_path, temp_welcome)
         self.render_report_thread(temp_welcome)
 
-        # Set generated html in page
-        html_path, _ = osp.splitext(temp_welcome)
-        html_path = html_path + '.html'
-        self.report_widget.set_html_from_file(html_path)
-
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
         self.main.tabify_plugins(self.main.help, self)
