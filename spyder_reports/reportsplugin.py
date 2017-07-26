@@ -10,7 +10,6 @@
 # Standard library imports
 import os.path as osp
 import shutil
-import tempfile
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
@@ -19,8 +18,9 @@ from qtpy.QtCore import Qt, Signal
 from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
-from spyder.utils.qthelpers import create_action
 from spyder.py3compat import PY3
+from spyder.utils.programs import TEMPDIR
+from spyder.utils.qthelpers import create_action
 from spyder.utils.workers import WorkerManager
 
 from .widgets.reportsgui import ReportsWidget
@@ -86,7 +86,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
         # Render welcome.md in a temp location
         welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
-        temp_welcome = osp.join(tempfile.gettempdir(), 'welcome.md')
+        temp_welcome = osp.join(TEMPDIR, 'welcome.md')
         shutil.copy(welcome_path, temp_welcome)
         self.render_report_thread(temp_welcome)
 
