@@ -147,7 +147,7 @@ class ReportsPlugin(SpyderPluginWidget):
             if error is None and output_file:
                 self.report_widget.set_html_from_file(output_file)
             else:
-                self.show_error_message(error)
+                self.show_error_message(str(error))
             self.sig_render_finished.emit()
 
         # Before starting a new worker process make sure to end previous
