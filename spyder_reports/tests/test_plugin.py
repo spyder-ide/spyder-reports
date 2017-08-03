@@ -7,7 +7,7 @@
 
 # Third party imports
 import pytest
-from qtpy.QtWebEngineWidgets import WEBENGINE
+import os.path as osp
 
 # Spyder-IDE and Local imports
 from spyder_reports.reportsplugin import ReportsPlugin
@@ -75,8 +75,9 @@ def test_render_report_thread(qtbot, report_mdw_file):
     ok, filename, error = sig.args
     assert ok
     assert error is None
+    assert osp.exists(filename)
 
-    renderview = reports.report_widget.renderviews.get(filename)
+    renderview = reports.report_widget.renderviews.get(report_mdw_file)
     assert renderview is not None
 
 

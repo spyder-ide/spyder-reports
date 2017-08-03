@@ -140,7 +140,7 @@ class ReportsPlugin(SpyderPluginWidget):
         def worker_output(worker, output_file, error):
             """Receive the worker output, and update the widget."""
             if error is None and output_file:
-                self.report_widget.set_html_from_file(output_file)
+                self.report_widget.set_html_from_file(output_file, file_name)
                 self.sig_render_finished.emit(True, output_file, None)
             else:
                 self.show_error_message(str(error))

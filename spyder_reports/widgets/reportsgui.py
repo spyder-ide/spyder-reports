@@ -74,14 +74,16 @@ class ReportsWidget(QWidget):
 
         self.tabs.setCurrentWidget(renderview)
 
-    def set_html_from_file(self, filename):
+    def set_html_from_file(self, output_fname, input_fname=None):
         """Set html text from a file."""
+        if input_fname is None:
+            input_fname = output_fname
         html = ""
-        with codecs.open(filename, encoding="utf-8") as file:
+        with codecs.open(output_fname, encoding="utf-8") as file:
             html = file.read()
 
         base_url = QUrl()
-        self.set_html(html, filename, base_url)
+        self.set_html(html, input_fname, base_url)
 
     def close_tab(self, index):
         """Close tab, and remove its widget form renderviews."""
