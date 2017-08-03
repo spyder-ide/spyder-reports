@@ -130,7 +130,7 @@ def test_set_html_from_file(qtbot, tmpdir_factory):
 
     reports.set_html_from_file(str(html_file))
 
-    renderviews = reports.renderviews.get('test_report.html')
+    renderviews = reports.renderviews.get(str(html_file))
     qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
     assert same_html(renderviews.page(), html)
 

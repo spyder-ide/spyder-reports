@@ -69,10 +69,14 @@ def test_render_report_thread(qtbot, report_mdw_file):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread(report_mdw_file)
+    
+    ok, filename, error = sig.args
+    assert ok
+    assert error is None
 
-    renderview = reports.report_widget.renderviews.get('test_report.html')
+    renderview = reports.report_widget.renderviews.get(filename)
     assert renderview is not None
 
 
@@ -80,11 +84,16 @@ def test_render_report_thread_error(qtbot):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread('file_that_doesnt_exist.mdw')
 
-    renderview = reports.report_widget.renderviews.get('file_that_doesnt_exist.html')
-    assert renderview is None
+    ok, filename, error = sig.args
+    assert not ok
+    assert "[Errno 2]" in error
+    assert filename is None
+
+    for renderview in reports.report_widget.renderviews:
+        assert not 'file_that_doesnt_exist' in renderview
 
 
 if __name__ == "__main__":

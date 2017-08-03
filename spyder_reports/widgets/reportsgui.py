@@ -79,8 +79,7 @@ class ReportsWidget(QWidget):
             html = file.read()
 
         base_url = QUrl()
-        name = osp.basename(filename)
-        self.set_html(html, name, base_url)
+        self.set_html(html, filename, base_url)
 
     def close_tab(self, index):
         """Close tab, and remove its widget form renderviews."""
