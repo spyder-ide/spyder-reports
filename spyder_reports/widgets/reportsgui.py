@@ -17,6 +17,7 @@ from qtpy.QtWidgets import QVBoxLayout, QWidget, QTabWidget
 
 # Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
+from spyder.utils.sourcecode import disambiguate_fname
 
 
 class RenderView(FrameWebView):
@@ -49,20 +50,21 @@ class ReportsWidget(QWidget):
 
         self.set_html('', 'Welcome')
 
-    def set_html(self, html_text, name, base_url=None):
+    def set_html(self, html_text, fname, base_url=None):
         """Set html text."""
-        renderview = self.renderviews.get(name)
+        name = self.disambiguate_fname(fname)
+        renderview = self.renderviews.get(fname)
 
         if 'Welcome' in self.renderviews and renderview is None:
             # Overwrite the welcome tab
             renderview = self.renderviews.pop('Welcome')
-            self.renderviews[name] = renderview
+            self.renderviews[fname] = renderview
             self.tabs.setTabText(0, name)
 
         if renderview is None:
             # create a new renderview
             renderview = RenderView(self)
-            self.renderviews[name] = renderview
+            self.renderviews[fname] = renderview
             self.tabs.addTab(renderview, name)
 
         if base_url is not None:
@@ -85,6 +87,12 @@ class ReportsWidget(QWidget):
         """Close tab, and remove its widget form renderviews."""
         self.renderviews.pop(self.tabs.tabText(index))
         self.tabs.removeTab(index)
+
+    def disambiguate_fname(self, fname):
+        """Generate a file name without ambiguation."""
+        files_path_list = [filename for filename in self.renderviews
+                           if filename]
+        return disambiguate_fname(files_path_list, fname)
 
     def clear_all(self):
         """Clear widget web view content."""
