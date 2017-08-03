@@ -7,6 +7,7 @@
 
 # Third party imports
 import pytest
+import os.path as osp
 from qtpy.QtCore import Qt
 from qtpy.QtWebEngineWidgets import WEBENGINE
 
@@ -92,19 +93,21 @@ def test_close_tabs(qtbot):
                 break
         qtbot.mouseClick(close_button, Qt.LeftButton)
 
-    reports.set_html('some html', 'file1')
-    reports.set_html('some html', 'file2')
+    fname1 = osp.join('dir', 'file1')
+    fname2 = osp.join('dir', 'file2')
+    reports.set_html('some html', fname1)
+    reports.set_html('some html', fname2)
     assert reports.tabs.count() == 2
 
     # close 'file2'
     close_tab(1)
     assert reports.tabs.count() == 1
-    assert reports.renderviews.get('file2') is None
+    assert reports.renderviews.get(fname2) is None
 
     # close 'file1'
     close_tab(0)
     assert reports.tabs.count() == 0
-    assert reports.renderviews.get('file1') is None
+    assert reports.renderviews.get(fname1) is None
 
 
 def test_set_html(qtbot):
