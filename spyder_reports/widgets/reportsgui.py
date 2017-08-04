@@ -110,8 +110,3 @@ class ReportsWidget(QWidget):
         """Generate a file name without ambiguation."""
         files_path_list = [filename for filename in self.filenames if filename]
         return disambiguate_fname(files_path_list, fname)
-
-    def clear_all(self):
-        """Clear widget web view content."""
-        for name in self.renderviews:
-            self.set_html('', name)
