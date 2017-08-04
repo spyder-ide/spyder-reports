@@ -43,6 +43,7 @@ class ReportsWidget(QWidget):
         self.tabs.tabCloseRequested.connect(self.close_tab)
 
         self.renderviews = {}
+        self.filenames = []
 
         layout = QVBoxLayout()
         layout.addWidget(self.tabs)
@@ -60,12 +61,14 @@ class ReportsWidget(QWidget):
             renderview = self.renderviews.pop('Welcome')
             self.renderviews[fname] = renderview
             self.tabs.setTabText(0, name)
+            self.filenames[0] = fname
 
         if renderview is None:
             # create a new renderview
             renderview = RenderView(self)
             self.renderviews[fname] = renderview
             self.tabs.addTab(renderview, name)
+            self.filenames.append(fname)
 
         if base_url is not None:
             renderview.setHtml(html_text, base_url)
@@ -87,12 +90,13 @@ class ReportsWidget(QWidget):
 
     def close_tab(self, index):
         """Close tab, and remove its widget form renderviews."""
-        self.renderviews.pop(self.tabs.tabText(index))
+        fname = self.filenames.pop(index)
+        self.renderviews.pop(fname)
         self.tabs.removeTab(index)
 
     def disambiguate_fname(self, fname):
         """Generate a file name without ambiguation."""
-        files_path_list = [filename for filename in self.renderviews
+        files_path_list = [filename for filename in self.filenames
                            if filename]
         return disambiguate_fname(files_path_list, fname)
 
