@@ -38,6 +38,21 @@ def setup_reports(qtbot):
     return widget
 
 
+@pytest.fixture
+def setup_reports_close_tab(qtbot):
+    reports = setup_reports(qtbot)
+
+    def close_tab(index):
+        """Find the close button and click it."""
+        for i in [0, 1]:  # LeftSide, RightSide
+            close_button = reports.tabs.tabBar().tabButton(index, i)
+            if close_button:
+                break
+        qtbot.mouseClick(close_button, Qt.LeftButton)
+
+    return reports, close_tab
+
+
 def test_reports(qtbot):
     """Run Reports Widget."""
     reports = setup_reports(qtbot)
@@ -83,15 +98,7 @@ def test_close_tabs(qtbot):
 
     When a tab is closed also the reference to the renderview should be removed.
     """
-    reports = setup_reports(qtbot)
-
-    def close_tab(index):
-        """Find the close button and click it."""
-        for i in [0, 1]:  # LeftSide, RightSide
-            close_button = reports.tabs.tabBar().tabButton(index, i)
-            if close_button:
-                break
-        qtbot.mouseClick(close_button, Qt.LeftButton)
+    reports, close_tab = setup_reports_close_tab(qtbot)
 
     fname1 = osp.join('dir', 'file1')
     fname2 = osp.join('dir', 'file2')
@@ -108,6 +115,24 @@ def test_close_tabs(qtbot):
     close_tab(0)
     assert reports.tabs.count() == 0
     assert reports.renderviews.get(fname1) is None
+
+
+def test_move_tabs(qtbot):
+    """Test that move_tab moves filenames list."""
+    reports, close_tab = setup_reports_close_tab(qtbot)
+
+    reports.set_html('some html', 'file1')
+    reports.set_html('some html', 'file2')
+    assert reports.filenames == ['file1', 'file2']
+
+    # Move tab
+    reports.move_tab(1, 0)
+    assert reports.filenames == ['file2', 'file1']
+
+    # Test closing a tab
+    close_tab(1)  # closes file1
+    assert reports.tabs.count() == 1
+    assert reports.renderviews.get('file1') is None
 
 
 def test_set_html(qtbot):
