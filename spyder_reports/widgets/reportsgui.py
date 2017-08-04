@@ -41,6 +41,7 @@ class ReportsWidget(QWidget):
         self.tabs.setMovable(True)
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.close_tab)
+        self.tabs.tabBar().tabMoved.connect(self.move_tab)
 
         self.renderviews = {}
         self.filenames = []
@@ -94,10 +95,20 @@ class ReportsWidget(QWidget):
         self.renderviews.pop(fname)
         self.tabs.removeTab(index)
 
+    def move_tab(self, start, end):
+        """Move self.filenames list to be synchronized when tabs are moved."""
+        if start < 0 or end < 0:
+            return
+        steps = abs(end - start)
+        direction = (end - start) // steps  # +1 for right, -1 for left
+
+        fnames = self.filenames
+        for i in range(start, end, direction):
+            fnames[i], fnames[i + direction] = fnames[i + direction], fnames[i]
+
     def disambiguate_fname(self, fname):
         """Generate a file name without ambiguation."""
-        files_path_list = [filename for filename in self.filenames
-                           if filename]
+        files_path_list = [filename for filename in self.filenames if filename]
         return disambiguate_fname(files_path_list, fname)
 
     def clear_all(self):
