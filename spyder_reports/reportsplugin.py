@@ -39,6 +39,10 @@ class ReportsPlugin(SpyderPluginWidget):
 
     CONF_SECTION = 'reports'
     CONFIGWIDGET_CLASS = None
+    sig_render_started = Signal(str)  # input filename
+
+    # Success, output filename(str), error(str)
+    # When an error happened returns input filename instead
     sig_render_finished = Signal(bool, object, object)
 
     def __init__(self, parent=None):
@@ -55,6 +59,9 @@ class ReportsPlugin(SpyderPluginWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
+
+        self.sig_render_started.connect(self.report_widget.show_progress)
+        self.sig_render_finished.connect(self.report_widget.render_finished)
 
         # This worker runs in a thread to avoid blocking when rendering
         # a report
@@ -153,7 +160,7 @@ class ReportsPlugin(SpyderPluginWidget):
                 self.sig_render_finished.emit(True, output_file, None)
             else:
                 self.show_error_message(str(error))
-                self.sig_render_finished.emit(False, None, str(error))
+                self.sig_render_finished.emit(False, file_name, str(error))
 
         # Before starting a new worker process make sure to end previous
         # incarnations
@@ -164,6 +171,7 @@ class ReportsPlugin(SpyderPluginWidget):
             file_name,
         )
         worker.sig_finished.connect(worker_output)
+        self.sig_render_started.emit(file_name)
         worker.start()
 
     def _render_report(self, file, output=None):

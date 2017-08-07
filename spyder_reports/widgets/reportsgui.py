@@ -9,15 +9,16 @@
 
 # Standard library imports
 import codecs
-import os.path as osp
 
 # Third party imports
-from qtpy.QtCore import QUrl
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QTabWidget
+from qtpy.QtCore import QUrl, Slot
+from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLabel, QWidget,
+                            QTabWidget)
 
 # Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
 from spyder.utils.sourcecode import disambiguate_fname
+from spyder.widgets.waitingspinner import QWaitingSpinner
 
 
 class RenderView(FrameWebView):
@@ -43,11 +44,24 @@ class ReportsWidget(QWidget):
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.tabs.tabBar().tabMoved.connect(self.move_tab)
 
+        # Progress bar
+        self.progress_bar = QWidget(self)
+        self.status_text = QLabel(self.progress_bar)
+        self.spinner = QWaitingSpinner(self.progress_bar, centerOnParent=False)
+        self.spinner.setNumberOfLines(12)
+        self.spinner.setInnerRadius(2)
+        progress_layout = QHBoxLayout()
+        progress_layout.addWidget(self.spinner)
+        progress_layout.addWidget(self.status_text)
+        self.progress_bar.setLayout(progress_layout)
+        self.progress_bar.hide()
+
         self.renderviews = {}
         self.filenames = []
 
         layout = QVBoxLayout()
         layout.addWidget(self.tabs)
+        layout.addWidget(self.progress_bar)
         self.setLayout(layout)
 
         self.set_html('', 'Welcome')
@@ -88,6 +102,38 @@ class ReportsWidget(QWidget):
 
         base_url = QUrl()
         self.set_html(html, input_fname, base_url)
+
+    @Slot(str)
+    def show_progress(self, fname):
+        """Show progress bar and starts spinner.
+
+        Args:
+            fname (str): Name of the file being rendered
+        """
+        self.spinner.start()
+        name = self.disambiguate_fname(fname)
+        text = "Rendering: {}".format(name)
+        self.status_text.setText(text)
+        self.progress_bar.show()
+        self.set_html('', fname)
+
+    @Slot(bool, object, object)
+    def render_finished(self, ok, fname, error):
+        """Handle render finish signal.
+
+        If error, displays it, otherwise hide progress bar.
+
+        Args:
+            ok (bool): True f the rener was succesful
+            fname (str): Name of the file being rendered
+            error (str): Error string to display
+        """
+        self.spinner.stop()
+        if error is not None:
+            self.status_text.setText(error)
+            self.close_tab(self.filenames.index(fname))
+        else:
+            self.progress_bar.hide()
 
     def close_tab(self, index):
         """Close tab, and remove its widget form renderviews."""

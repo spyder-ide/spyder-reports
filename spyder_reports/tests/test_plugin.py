@@ -92,8 +92,12 @@ def test_render_report_thread_error(qtbot):
     ok, filename, error = sig.args
     assert not ok
     assert "[Errno 2]" in error
-    assert filename is None
+    assert filename == 'file_that_doesnt_exist.mdw'
 
+    def tab_closed():
+        assert reports.report_widget.tabs.count() == 0
+
+    qtbot.waitUntil(tab_closed)
     for renderview in reports.report_widget.renderviews:
         assert 'file_that_doesnt_exist' not in renderview
 
