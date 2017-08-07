@@ -71,7 +71,7 @@ def test_render_report_thread(qtbot, report_mdw_file):
 
     with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread(report_mdw_file)
-    
+
     ok, filename, error = sig.args
     assert ok
     assert error is None
@@ -94,7 +94,7 @@ def test_render_report_thread_error(qtbot):
     assert filename is None
 
     for renderview in reports.report_widget.renderviews:
-        assert not 'file_that_doesnt_exist' in renderview
+        assert 'file_that_doesnt_exist' not in renderview
 
 
 if __name__ == "__main__":

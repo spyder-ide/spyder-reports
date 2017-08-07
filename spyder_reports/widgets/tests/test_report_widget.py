@@ -40,6 +40,7 @@ def setup_reports(qtbot):
 
 @pytest.fixture
 def setup_reports_close_tab(qtbot):
+    """Set up reports widget, witha handy function to close tabs."""
     reports = setup_reports(qtbot)
 
     def close_tab(index):
@@ -96,7 +97,8 @@ def test_close_tabs(qtbot):
     """
     Test closing tabs.
 
-    When a tab is closed also the reference to the renderview should be removed.
+    When a tab is closed also the reference to the renderview should be
+    removed.
     """
     reports, close_tab = setup_reports_close_tab(qtbot)
 
