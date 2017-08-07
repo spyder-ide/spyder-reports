@@ -121,10 +121,10 @@ class ReportsPlugin(SpyderPluginWidget):
 
     # -------------------------------------------------------------------------
 
-    def check_create_tmp_dir(self, dir_):
+    def check_create_tmp_dir(self, folder):
         """Create temp dir if it does not exists."""
-        if not os.path.exists(dir_):
-            os.makedirs(dir_)
+        if not os.path.exists(folder):
+            os.makedirs(folder)
 
     def show_error_message(self, message):
         """Show error message."""
@@ -184,8 +184,8 @@ class ReportsPlugin(SpyderPluginWidget):
                 output = osp.join(REPORTS_TEMPDIR, id_, '{}.html'.format(name))
                 self._output_tmpfile[file] = output
 
-        dir_ = osp.split(output)[0]
-        self.check_create_tmp_dir(dir_)
+        folder = osp.split(output)[0]
+        self.check_create_tmp_dir(folder)
         doc = Pweb(file, output=output)
 
         # TODO Add more formats support
