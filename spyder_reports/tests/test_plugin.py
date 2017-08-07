@@ -7,7 +7,7 @@
 
 # Third party imports
 import pytest
-from qtpy.QtWebEngineWidgets import WEBENGINE
+import os.path as osp
 
 # Spyder-IDE and Local imports
 from spyder_reports.reportsplugin import ReportsPlugin
@@ -69,10 +69,15 @@ def test_render_report_thread(qtbot, report_mdw_file):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread(report_mdw_file)
 
-    renderview = reports.report_widget.renderviews.get('test_report.html')
+    ok, filename, error = sig.args
+    assert ok
+    assert error is None
+    assert osp.exists(filename)
+
+    renderview = reports.report_widget.renderviews.get(report_mdw_file)
     assert renderview is not None
 
 
@@ -80,11 +85,16 @@ def test_render_report_thread_error(qtbot):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread('file_that_doesnt_exist.mdw')
 
-    renderview = reports.report_widget.renderviews.get('file_that_doesnt_exist.html')
-    assert renderview is None
+    ok, filename, error = sig.args
+    assert not ok
+    assert "[Errno 2]" in error
+    assert filename is None
+
+    for renderview in reports.report_widget.renderviews:
+        assert 'file_that_doesnt_exist' not in renderview
 
 
 if __name__ == "__main__":

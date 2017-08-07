@@ -36,7 +36,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
     CONF_SECTION = 'reports'
     CONFIGWIDGET_CLASS = None
-    sig_render_finished = Signal()
+    sig_render_finished = Signal(bool, object, object)
 
     def __init__(self, parent=None):
         """
@@ -140,10 +140,11 @@ class ReportsPlugin(SpyderPluginWidget):
         def worker_output(worker, output_file, error):
             """Receive the worker output, and update the widget."""
             if error is None and output_file:
-                self.report_widget.set_html_from_file(output_file)
+                self.report_widget.set_html_from_file(output_file, file_name)
+                self.sig_render_finished.emit(True, output_file, None)
             else:
                 self.show_error_message(str(error))
-            self.sig_render_finished.emit()
+                self.sig_render_finished.emit(False, None, str(error))
 
         # Before starting a new worker process make sure to end previous
         # incarnations

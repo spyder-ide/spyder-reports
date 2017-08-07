@@ -17,6 +17,7 @@ from qtpy.QtWidgets import QVBoxLayout, QWidget, QTabWidget
 
 # Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
+from spyder.utils.sourcecode import disambiguate_fname
 
 
 class RenderView(FrameWebView):
@@ -40,8 +41,10 @@ class ReportsWidget(QWidget):
         self.tabs.setMovable(True)
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.close_tab)
+        self.tabs.tabBar().tabMoved.connect(self.move_tab)
 
         self.renderviews = {}
+        self.filenames = []
 
         layout = QVBoxLayout()
         layout.addWidget(self.tabs)
@@ -49,21 +52,24 @@ class ReportsWidget(QWidget):
 
         self.set_html('', 'Welcome')
 
-    def set_html(self, html_text, name, base_url=None):
+    def set_html(self, html_text, fname, base_url=None):
         """Set html text."""
-        renderview = self.renderviews.get(name)
+        name = self.disambiguate_fname(fname)
+        renderview = self.renderviews.get(fname)
 
         if 'Welcome' in self.renderviews and renderview is None:
             # Overwrite the welcome tab
             renderview = self.renderviews.pop('Welcome')
-            self.renderviews[name] = renderview
+            self.renderviews[fname] = renderview
             self.tabs.setTabText(0, name)
+            self.filenames[0] = fname
 
         if renderview is None:
             # create a new renderview
             renderview = RenderView(self)
-            self.renderviews[name] = renderview
+            self.renderviews[fname] = renderview
             self.tabs.addTab(renderview, name)
+            self.filenames.append(fname)
 
         if base_url is not None:
             renderview.setHtml(html_text, base_url)
@@ -72,22 +78,35 @@ class ReportsWidget(QWidget):
 
         self.tabs.setCurrentWidget(renderview)
 
-    def set_html_from_file(self, filename):
+    def set_html_from_file(self, output_fname, input_fname=None):
         """Set html text from a file."""
+        if input_fname is None:
+            input_fname = output_fname
         html = ""
-        with codecs.open(filename, encoding="utf-8") as file:
+        with codecs.open(output_fname, encoding="utf-8") as file:
             html = file.read()
 
         base_url = QUrl()
-        name = osp.basename(filename)
-        self.set_html(html, name, base_url)
+        self.set_html(html, input_fname, base_url)
 
     def close_tab(self, index):
         """Close tab, and remove its widget form renderviews."""
-        self.renderviews.pop(self.tabs.tabText(index))
+        fname = self.filenames.pop(index)
+        self.renderviews.pop(fname)
         self.tabs.removeTab(index)
 
-    def clear_all(self):
-        """Clear widget web view content."""
-        for name in self.renderviews:
-            self.set_html('', name)
+    def move_tab(self, start, end):
+        """Move self.filenames list to be synchronized when tabs are moved."""
+        if start < 0 or end < 0:
+            return
+        steps = abs(end - start)
+        direction = (end - start) // steps  # +1 for right, -1 for left
+
+        fnames = self.filenames
+        for i in range(start, end, direction):
+            fnames[i], fnames[i + direction] = fnames[i + direction], fnames[i]
+
+    def disambiguate_fname(self, fname):
+        """Generate a file name without ambiguation."""
+        files_path_list = [filename for filename in self.filenames if filename]
+        return disambiguate_fname(files_path_list, fname)
