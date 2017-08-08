@@ -156,3 +156,18 @@ class ReportsWidget(QWidget):
         """Generate a file name without ambiguation."""
         files_path_list = [filename for filename in self.filenames if filename]
         return disambiguate_fname(files_path_list, fname)
+
+
+def test():  # pragma: no cover
+    """Run Find in Files widget test."""
+    from spyder.utils.qthelpers import qapplication
+    import sys
+    app = qapplication()
+    widget = ReportsWidget(None)
+    widget.resize(640, 480)
+    widget.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    test()
