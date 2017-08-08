@@ -152,6 +152,34 @@ def test_render_report_thread_error(qtbot):
     assert error in reports.report_widget.status_text.text()
 
 
+def test_render_report_thread_not_supported(qtbot, tmpdir_factory):
+    """Test rendering report in a worker thread."""
+    reports = setup_reports(qtbot)
+
+    python_file = tmpdir_factory.mktemp('data').join("'test_report.py")
+    python_file.write('# This is a python file')
+    python_file = str(python_file)
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
+        reports.render_report_thread(python_file)
+
+    ok, filename, error = sig.args
+    assert not ok
+    assert "Format not supported (.py)" in error
+    assert filename == python_file
+
+    def tab_closed():
+        assert reports.report_widget.tabs.count() == 0
+
+    qtbot.waitUntil(tab_closed)
+    for renderview in reports.report_widget.renderviews:
+        assert python_file not in renderview
+
+    # Assert that progress bar shows the error
+    assert reports.report_widget.progress_bar.isVisible()
+    assert error in reports.report_widget.status_text.text()
+
+
 def test_render_tmp_dir(qtbot, report_file):
     """Test that rendered files are created in spyder's tempdir."""
     reports = setup_reports(qtbot)
