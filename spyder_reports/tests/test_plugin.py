@@ -66,6 +66,43 @@ def test_check_compability(qtbot, monkeypatch):
     assert 'python2' in message.lower()
 
 
+def test_run_reports_render(qtbot, report_mdw_file, monkeypatch):
+    """Test rendering a report when calling it from menu entry."""
+    reports = setup_reports(qtbot)
+
+    class EditorStackMock():
+        def save(self):
+            return True
+
+    class EditorMock():
+        def get_current_editorstack(self):
+            return EditorStackMock()
+
+        def get_current_filename(self):
+            return report_mdw_file
+
+    class MainMock():
+        editor = EditorMock()
+
+    def switch_to_plugin():
+        pass
+
+    # patch reports object with mock MainWindow
+    reports.main = MainMock()
+    reports.switch_to_plugin = switch_to_plugin
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
+        reports.run_reports_render()
+
+    ok, filename, error = sig.args
+    assert ok
+    assert error is None
+    assert osp.exists(filename)
+
+    renderview = reports.report_widget.renderviews.get(report_mdw_file)
+    assert renderview is not None
+
+
 def test_render_report_thread(qtbot, report_mdw_file):
     """Test rendering report in a worker thread."""
     reports = setup_reports(qtbot)
