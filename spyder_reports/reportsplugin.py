@@ -225,8 +225,7 @@ class ReportsPlugin(SpyderPluginWidget):
         elif doc.file_ext == '.md':
             _format = 'pandoc2html'
         else:
-            print("Format not supported ({})".format(doc.file_ext))
-            return
+            raise Exception("Format not supported ({})".format(doc.file_ext))
 
         f = CaptureStdOutput(self.sig_render_progress)
 
