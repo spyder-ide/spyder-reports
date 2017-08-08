@@ -71,12 +71,20 @@ def test_render_report_thread(qtbot, report_mdw_file):
     reports = setup_reports(qtbot)
 
     with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
-        reports.render_report_thread(report_mdw_file)
+        with qtbot.waitSignal(reports.sig_render_started):
+            reports.render_report_thread(report_mdw_file)
+
+        # Assert that progress bar was shown
+        assert reports.report_widget.progress_bar.isVisible()
+        assert 'Rendering' in reports.report_widget.status_text.text()
 
     ok, filename, error = sig.args
     assert ok
     assert error is None
     assert osp.exists(filename)
+
+    # Assert that progress bar was hidden
+    assert not reports.report_widget.progress_bar.isVisible()
 
     renderview = reports.report_widget.renderviews.get(report_mdw_file)
     assert renderview is not None
@@ -100,6 +108,10 @@ def test_render_report_thread_error(qtbot):
     qtbot.waitUntil(tab_closed)
     for renderview in reports.report_widget.renderviews:
         assert 'file_that_doesnt_exist' not in renderview
+
+    # Assert that progress bar shows the error
+    assert reports.report_widget.progress_bar.isVisible()
+    assert error in reports.report_widget.status_text.text()
 
 
 def test_render_tmp_dir(qtbot, report_mdw_file):
