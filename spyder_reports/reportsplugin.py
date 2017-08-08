@@ -11,6 +11,8 @@
 import os
 import os.path as osp
 import uuid
+from contextlib import redirect_stdout
+from io import StringIO
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
@@ -34,6 +36,24 @@ except ImportError:
 REPORTS_TEMPDIR = osp.join(TEMPDIR, 'reports')
 
 
+class CaptureStdOutput(StringIO):
+    """Captures IO stream and emit a signal."""
+
+    def __init__(self, sig_write):
+        """Initialize object.
+
+        Args:
+            sig_write (Signal): signal to emit
+        """
+        super(CaptureStdOutput).__init__()
+        self.sig_write = sig_write
+
+    def write(self, text):
+        """Emit a signal instead of writing. (Overloaded method)."""
+        self.sig_write.emit(text.strip())
+        return len(text)
+
+
 class ReportsPlugin(SpyderPluginWidget):
     """Reports plugin."""
 
@@ -44,6 +64,8 @@ class ReportsPlugin(SpyderPluginWidget):
     # Success, output filename(str), error(str)
     # When an error happened returns input filename instead
     sig_render_finished = Signal(bool, object, object)
+
+    sig_render_progress = Signal(str)
 
     def __init__(self, parent=None):
         """
@@ -60,7 +82,8 @@ class ReportsPlugin(SpyderPluginWidget):
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
 
-        self.sig_render_started.connect(self.report_widget.show_progress)
+        self.sig_render_started.connect(self.report_widget.render_started)
+        self.sig_render_progress.connect(self.report_widget.update_progress)
         self.sig_render_finished.connect(self.report_widget.render_finished)
 
         # This worker runs in a thread to avoid blocking when rendering
@@ -205,17 +228,25 @@ class ReportsPlugin(SpyderPluginWidget):
             print("Format not supported ({})".format(doc.file_ext))
             return
 
+        f = CaptureStdOutput(self.sig_render_progress)
+
         if pweave_version.startswith('0.3'):
-            doc.read()
-            doc.run()
-            doc.format(doctype=_format)
-            doc.write()
+            with redirect_stdout(f):
+                self.sig_render_progress.emit("Readign")
+                doc.read()
+                self.sig_render_progress.emit("Running")
+                doc.run()
+                self.sig_render_progress.emit("Formating")
+                doc.format(doctype=_format)
+                self.sig_render_progress.emit("Writing")
+                doc.write()
             return doc.sink
         else:
-            doc.setformat(_format)
-            doc.detect_reader()
-            doc.parse()
-            doc.run(shell="ipython")
-            doc.format()
-            doc.write()
+            with redirect_stdout(f):
+                doc.setformat(_format)
+                doc.detect_reader()
+                doc.parse()
+                doc.run(shell="ipython")
+                doc.format()
+                doc.write()
             return doc.sink

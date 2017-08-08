@@ -104,7 +104,7 @@ class ReportsWidget(QWidget):
         self.set_html(html, input_fname, base_url)
 
     @Slot(str)
-    def show_progress(self, fname):
+    def render_started(self, fname):
         """Show progress bar and starts spinner.
 
         Args:
@@ -116,6 +116,17 @@ class ReportsWidget(QWidget):
         self.status_text.setText(text)
         self.progress_bar.show()
         self.set_html('', fname)
+
+    @Slot(str)
+    def update_progress(self, text):
+        """Update progress bar status text.
+
+        Args:
+            text (str):  text to be displayed.
+        """
+        if len(text) > 50:
+            text = "{}...".format(text[:47])
+        self.status_text.setText(text)
 
     @Slot(bool, object, object)
     def render_finished(self, ok, fname, error):
