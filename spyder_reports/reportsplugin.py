@@ -8,8 +8,9 @@
 """Reports Plugin."""
 
 # Standard library imports
+import os
 import os.path as osp
-import shutil
+import uuid
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
@@ -29,6 +30,8 @@ try:
     from spyder.api.plugins import SpyderPluginWidget
 except ImportError:
     from spyder.plugins import SpyderPluginWidget  # Spyder 3 compatibility
+
+REPORTS_TEMPDIR = osp.join(TEMPDIR, 'reports')
 
 
 class ReportsPlugin(SpyderPluginWidget):
@@ -56,6 +59,9 @@ class ReportsPlugin(SpyderPluginWidget):
         # This worker runs in a thread to avoid blocking when rendering
         # a report
         self._worker_manager = WorkerManager()
+
+        # Dict to save output files to regenerate files in the same tmpdir
+        self._output_tmpfile = {}
 
         # Initialize plugin
         self.initialize_plugin()
@@ -86,9 +92,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
         # Render welcome.md in a temp location
         welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
-        temp_welcome = osp.join(TEMPDIR, 'welcome.md')
-        shutil.copy(welcome_path, temp_welcome)
-        self.render_report_thread(temp_welcome)
+        self.render_report_thread(welcome_path)
 
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
@@ -116,6 +120,11 @@ class ReportsPlugin(SpyderPluginWidget):
         return valid, ", ".join(messages)
 
     # -------------------------------------------------------------------------
+
+    def check_create_tmp_dir(self, folder):
+        """Create temp dir if it does not exists."""
+        if not os.path.exists(folder):
+            os.makedirs(folder)
 
     def show_error_message(self, message):
         """Show error message."""
@@ -157,7 +166,7 @@ class ReportsPlugin(SpyderPluginWidget):
         worker.sig_finished.connect(worker_output)
         worker.start()
 
-    def _render_report(self, file):
+    def _render_report(self, file, output=None):
         """
         Parse report document using pweave.
 
@@ -167,7 +176,17 @@ class ReportsPlugin(SpyderPluginWidget):
         Return:
             Output file path
         """
-        doc = Pweb(file)
+        if output is None:
+            output = self._output_tmpfile.get(file)
+            if output is None:
+                name = osp.splitext(osp.basename(file))[0]
+                id_ = str(uuid.uuid4())
+                output = osp.join(REPORTS_TEMPDIR, id_, '{}.html'.format(name))
+                self._output_tmpfile[file] = output
+
+        folder = osp.split(output)[0]
+        self.check_create_tmp_dir(folder)
+        doc = Pweb(file, output=output)
 
         # TODO Add more formats support
         if doc.file_ext == '.mdw':

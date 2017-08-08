@@ -10,6 +10,7 @@ import pytest
 import os.path as osp
 
 # Spyder-IDE and Local imports
+from spyder.utils.programs import TEMPDIR
 from spyder_reports.reportsplugin import ReportsPlugin
 
 
@@ -95,6 +96,27 @@ def test_render_report_thread_error(qtbot):
 
     for renderview in reports.report_widget.renderviews:
         assert 'file_that_doesnt_exist' not in renderview
+
+
+def test_render_tmp_dir(qtbot, report_mdw_file):
+    """Test that rendered files are created in spyder's tempdir."""
+    reports = setup_reports(qtbot)
+    output_file = reports._render_report(report_mdw_file)
+
+    # Test that outfile is in spyder tmp dir
+    assert osp.samefile(osp.commonprefix([output_file, TEMPDIR]), TEMPDIR)
+
+
+def test_render_same_file(qtbot, report_mdw_file):
+    """Test that re-rendered files are created in the same tempdir."""
+    reports = setup_reports(qtbot)
+
+    output_file1 = reports._render_report(report_mdw_file)
+    output_file2 = reports._render_report(report_mdw_file)
+
+    assert osp.exists(output_file2)
+    # Assert that file has been re-rendered in the same path
+    assert osp.samefile(output_file1, output_file2)
 
 
 if __name__ == "__main__":
