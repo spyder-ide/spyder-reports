@@ -12,13 +12,16 @@ import codecs
 
 # Third party imports
 from qtpy.QtCore import QUrl, Slot
-from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLabel, QWidget,
-                            QTabWidget)
+from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLabel, QWidget, QMenu,
+                            QToolButton)
 
 # Spyder-IDE and Local imports
 from spyder.widgets.browser import FrameWebView
 from spyder.utils.sourcecode import disambiguate_fname
 from spyder.widgets.waitingspinner import QWaitingSpinner
+from spyder.widgets.tabs import BaseTabs
+from spyder.utils import icon_manager as ima
+from spyder.utils.qthelpers import (add_actions, create_toolbutton)
 
 
 class RenderView(FrameWebView):
@@ -32,13 +35,19 @@ class RenderView(FrameWebView):
 class ReportsWidget(QWidget):
     """Reports widget."""
 
-    def __init__(self, parent):
+    def __init__(self, parent, menu_actions=None):
         """Initialiaze ReportsWidget."""
         QWidget.__init__(self, parent)
 
+        self.renderviews = {}
+        self.filenames = []
+        self.menu_actions = menu_actions
+
         self.setWindowTitle("Reports")
 
-        self.tabs = QTabWidget()
+        self.tabs = BaseTabs(self,
+                             actions=self.menu_actions,
+                             menu_use_tooltips=False)
         self.tabs.setMovable(True)
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.close_tab)
@@ -56,8 +65,16 @@ class ReportsWidget(QWidget):
         self.progress_bar.setLayout(progress_layout)
         self.progress_bar.hide()
 
-        self.renderviews = {}
-        self.filenames = []
+        # Menu as corner widget
+        if self.menu_actions:
+            options_button = create_toolbutton(self,
+                                               text='Options',
+                                               icon=ima.icon('tooloptions'))
+            options_button.setPopupMode(QToolButton.InstantPopup)
+            menu = QMenu(self)
+            add_actions(menu, self.menu_actions)
+            options_button.setMenu(menu)
+            self.tabs.setCornerWidget(options_button)
 
         layout = QVBoxLayout()
         layout.addWidget(self.tabs)

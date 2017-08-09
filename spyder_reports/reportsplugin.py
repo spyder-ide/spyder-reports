@@ -75,9 +75,14 @@ class ReportsPlugin(SpyderPluginWidget):
         """
         SpyderPluginWidget.__init__(self, parent)
         self.main = parent  # Spyder 3 compatibility
+        self.render_action = None
+        self.save_action = None
+
+        # Initialize plugin
+        self.initialize_plugin()
 
         # Create widget and add to dockwindow
-        self.report_widget = ReportsWidget(self.main)
+        self.report_widget = ReportsWidget(self.main, [self.save_action])
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
@@ -93,9 +98,6 @@ class ReportsPlugin(SpyderPluginWidget):
         # Dict to save output files to regenerate files in the same tmpdir
         self._output_tmpfile = {}
 
-        # Initialize plugin
-        self.initialize_plugin()
-
     # --- SpyderPluginWidget API ----------------------------------------------
     def get_plugin_title(self):
         """Return widget title."""
@@ -107,18 +109,22 @@ class ReportsPlugin(SpyderPluginWidget):
 
     def get_plugin_actions(self):
         """Return a list of actions related to plugin."""
-        return []
+        self.render_action = create_action(self,
+                                           "Render report to HTML",
+                                           icon=self.get_plugin_icon(),
+                                           triggered=self.run_reports_render)
+
+        self.save_action = create_action(self,
+                                         "Save Report",
+                                         triggered=self.save_report)
+
+        self.main.run_menu_actions += [self.render_action]
+
+        return [self.render_action, self.save_action]
 
     def register_plugin(self):
         """Register plugin in Spyder's main window."""
         self.main.add_dockwidget(self)
-
-        reports_act = create_action(self,
-                                    "Render report to HTML ",
-                                    icon=self.get_plugin_icon(),
-                                    triggered=self.run_reports_render)
-
-        self.main.run_menu_actions += [reports_act]
 
         # Render welcome.md in a temp location
         welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
@@ -165,6 +171,9 @@ class ReportsPlugin(SpyderPluginWidget):
         messageBox.setText(message)
         messageBox.setStandardButtons(QMessageBox.Ok)
         messageBox.show()
+
+    def save_report(self):
+        pass
 
     def run_reports_render(self):
         """Call report rendering and displays its output."""
