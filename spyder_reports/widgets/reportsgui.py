@@ -185,6 +185,10 @@ class ReportsWidget(QWidget):
         files_path_list = [filename for filename in self.filenames if filename]
         return disambiguate_fname(files_path_list, fname)
 
+    def get_focus_report(self):
+        """Return current report."""
+        return self.filenames[self.tabs.currentIndex()]
+
 
 def test():  # pragma: no cover
     """Run Find in Files widget test."""

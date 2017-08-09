@@ -11,12 +11,15 @@
 import os
 import os.path as osp
 import uuid
+import shutil
+from distutils.dir_util import copy_tree
 from contextlib import redirect_stdout
 from io import StringIO
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
 from qtpy import PYQT4, PYSIDE
+from qtpy.compat import getsavefilename, getexistingdirectory
 from qtpy.QtCore import Qt, Signal
 from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
@@ -173,7 +176,31 @@ class ReportsPlugin(SpyderPluginWidget):
         messageBox.show()
 
     def save_report(self):
-        pass
+        """Save report.
+
+        If the poutput are several files copy temporary dir to user
+        selected directory.
+
+        If the oputput is just one file copy it, to the user selected path.
+        """
+        report_filename = self.report_widget.get_focus_report()
+        output_filename = self._output_tmpfile[report_filename]
+
+        input_dir, input_fname = osp.split(report_filename)
+        tmpdir, output_fname = osp.split(output_filename)
+
+        if len([name for name in os.listdir(tmpdir)]) > 1:
+            # if there is more than one file save a dir
+            dirname = getexistingdirectory(parent=self,
+                                           caption='Save Report',
+                                           basedir=input_dir)
+            copy_tree(tmpdir, dirname)
+        else:
+            basedir = osp.join(input_dir, output_fname)
+            filename, _ = getsavefilename(parent=self,
+                                          caption='Save Report',
+                                          basedir=basedir)
+            shutil.copy(output_filename, filename)
 
     def run_reports_render(self):
         """Call report rendering and displays its output."""
