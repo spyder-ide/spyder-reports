@@ -70,6 +70,24 @@ def test_check_compability(qtbot, setup_reports, monkeypatch):
     assert 'python2' in message.lower()
 
 
+def test_get_plugin_actions(qtbot, setup_reports):
+    """Test get plugin actions method."""
+    reports = setup_reports
+
+    class MainMock():
+        run_menu_actions = []
+
+    # patch reports object with mock MainWindow
+    reports.main = MainMock()
+
+    menu_actions = reports.get_plugin_actions()
+
+    assert len(menu_actions) == 2
+    assert menu_actions[0].text() == "Render report to HTML"
+    assert menu_actions[1].text() == "Save Report"
+    assert reports.main.run_menu_actions[0].text() == "Render report to HTML"
+
+
 def test_run_reports_render(qtbot, setup_reports, report_file):
     """Test rendering a report when calling it from menu entry."""
     reports = setup_reports
