@@ -245,7 +245,7 @@ class ReportsPlugin(SpyderPluginWidget):
                 doc.setformat(_format)
                 doc.detect_reader()
                 doc.parse()
-                doc.run(shell="ipython")
+                doc.run()
                 doc.format()
                 doc.write()
             return doc.sink
