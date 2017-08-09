@@ -7,6 +7,7 @@
 
 # Third party imports
 import pytest
+import os
 import os.path as osp
 
 # Spyder-IDE and Local imports
@@ -221,6 +222,33 @@ def test_render_same_file(qtbot, setup_reports, report_file):
     assert osp.exists(output_file2)
     # Assert that file has been re-rendered in the same path
     assert osp.samefile(output_file1, output_file2)
+
+
+def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
+                     monkeypatch):
+    """Test saving a report.
+
+    Test copying from tempdir to an user selected location.
+    """
+    reports = setup_reports
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
+        reports.render_report_thread(report_file)
+
+    ok, filename, error = sig.args
+    assert ok
+    assert error is None
+    assert osp.exists(filename)
+
+    folder, _ = osp.split(filename)
+    save_folder = str(tmpdir_factory.mktemp('data2'))
+
+    monkeypatch.setattr('spyder_reports.reportsplugin.getexistingdirectory',
+                        lambda *args, **kwargs: save_folder)
+
+    reports.save_report()
+
+    assert set(os.listdir(folder)) == set(os.listdir(save_folder))
 
 
 if __name__ == "__main__":
