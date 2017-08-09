@@ -15,8 +15,11 @@ from spyder_reports.reportsplugin import ReportsPlugin
 
 
 @pytest.fixture
-def setup_reports(qtbot):
+def setup_reports(qtbot, monkeypatch):
     """Set up the Reports plugin."""
+    monkeypatch.setattr(
+            'spyder_reports.reportsplugin.ReportsPlugin.initialize_plugin',
+            lambda self: None)
     reports = ReportsPlugin(None)
     qtbot.addWidget(reports)
     reports.show()
@@ -37,29 +40,29 @@ def report_file(request, tmpdir_factory):
     return str(report_file)
 
 
-def test_basic_initialization(qtbot):
+def test_basic_initialization(qtbot, setup_reports):
     """Test Reports plugin initialization."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     # Assert that reports exist
     assert reports is not None
 
 
-def test_basic_render(qtbot, report_file):
+def test_basic_render(qtbot, report_file, setup_reports):
     """Test rendering of an basic .mdw report returning a .html file."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
     output_file = reports._render_report(report_file)
 
     # Assert that output_file is an html file
     assert output_file.split('.')[-1] == 'html'
 
 
-def test_check_compability(qtbot, monkeypatch):
+def test_check_compability(qtbot, setup_reports, monkeypatch):
     """Test state and message returned by check_compatibility."""
     monkeypatch.setattr('spyder_reports.reportsplugin.PYQT4', True)
     monkeypatch.setattr('spyder_reports.reportsplugin.PY3', False)
 
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     valid, message = reports.check_compatibility()
     assert not valid
@@ -67,9 +70,9 @@ def test_check_compability(qtbot, monkeypatch):
     assert 'python2' in message.lower()
 
 
-def test_run_reports_render(qtbot, report_file, monkeypatch):
+def test_run_reports_render(qtbot, setup_reports, report_file):
     """Test rendering a report when calling it from menu entry."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     class EditorStackMock():
         def save(self):
@@ -104,9 +107,9 @@ def test_run_reports_render(qtbot, report_file, monkeypatch):
     assert renderview is not None
 
 
-def test_render_report_thread(qtbot, report_file):
+def test_render_report_thread(qtbot, setup_reports, report_file):
     """Test rendering report in a worker thread."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         with qtbot.waitSignal(reports.sig_render_started):
@@ -128,9 +131,9 @@ def test_render_report_thread(qtbot, report_file):
     assert renderview is not None
 
 
-def test_render_report_thread_error(qtbot):
+def test_render_report_thread_error(qtbot, setup_reports):
     """Test rendering report in a worker thread."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
         reports.render_report_thread('file_that_doesnt_exist.mdw')
@@ -152,9 +155,10 @@ def test_render_report_thread_error(qtbot):
     assert error in reports.report_widget.status_text.text()
 
 
-def test_render_report_thread_not_supported(qtbot, tmpdir_factory):
+def test_render_report_thread_not_supported(qtbot, setup_reports,
+                                            tmpdir_factory):
     """Test rendering report in a worker thread."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     python_file = tmpdir_factory.mktemp('data').join("'test_report.py")
     python_file.write('# This is a python file')
@@ -180,18 +184,18 @@ def test_render_report_thread_not_supported(qtbot, tmpdir_factory):
     assert error in reports.report_widget.status_text.text()
 
 
-def test_render_tmp_dir(qtbot, report_file):
+def test_render_tmp_dir(qtbot, setup_reports, report_file):
     """Test that rendered files are created in spyder's tempdir."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
     output_file = reports._render_report(report_file)
 
     # Test that outfile is in spyder tmp dir
     assert osp.samefile(osp.commonprefix([output_file, TEMPDIR]), TEMPDIR)
 
 
-def test_render_same_file(qtbot, report_file):
+def test_render_same_file(qtbot, setup_reports, report_file):
     """Test that re-rendered files are created in the same tempdir."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     output_file1 = reports._render_report(report_file)
     output_file2 = reports._render_report(report_file)
