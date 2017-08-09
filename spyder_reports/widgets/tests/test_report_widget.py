@@ -13,6 +13,7 @@ from qtpy.QtWebEngineWidgets import WEBENGINE
 
 # Spyder-IDE and Local imports
 from spyder_reports.widgets.reportsgui import ReportsWidget
+from spyder.utils.qthelpers import create_action
 
 
 def same_html(widget, html):
@@ -36,6 +37,17 @@ def setup_reports(qtbot):
     widget = ReportsWidget(None)
     qtbot.addWidget(widget)
     return widget
+
+
+@pytest.fixture
+def setup_reports_actions(qtbot):
+    """Set up reports, with some actions."""
+    action = create_action(None,
+                           "Some action",
+                           triggered=lambda self: None)
+    widget = ReportsWidget(None, [action])
+    qtbot.addWidget(widget)
+    return widget, action
 
 
 @pytest.fixture
@@ -163,6 +175,13 @@ def test_set_html_from_file(qtbot, tmpdir_factory):
     renderviews = reports.renderviews.get(str(html_file))
     qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
     assert same_html(renderviews.page(), html)
+
+
+def test_menu_actions(qtbot):
+    """Test adding tooltip menu to teh widget."""
+    reports, action = setup_reports_actions(qtbot)
+
+    assert action in reports.tabs.cornerWidget().menu().actions()
 
 
 if __name__ == "__main__":
