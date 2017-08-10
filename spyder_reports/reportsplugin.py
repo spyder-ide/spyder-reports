@@ -131,10 +131,11 @@ class ReportsPlugin(SpyderPluginWidget):
                                          icon=ima.icon('filesave'),
                                          triggered=self.save_report)
 
-        self.save_as_action = create_action(self,
-                                            "Save Report as...",
-                                            icon=ima.icon('filesaveas'),
-                                            triggered=self.save_as_report)
+        self.save_as_action = create_action(
+                self,
+                "Save Report as...",
+                icon=ima.icon('filesaveas'),
+                triggered=lambda: self.save_report(new_path=True))
         self.main.run_menu_actions += [self.render_action]
 
         return [self.render_action, self.save_action, self.save_as_action]
@@ -188,9 +189,6 @@ class ReportsPlugin(SpyderPluginWidget):
         messageBox.setText(message)
         messageBox.setStandardButtons(QMessageBox.Ok)
         messageBox.show()
-
-    def save_as_report(self):
-        pass
 
     def save_report(self, new_path=False):
         """Save report.
