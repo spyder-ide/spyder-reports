@@ -192,7 +192,7 @@ class ReportsPlugin(SpyderPluginWidget):
     def save_as_report(self):
         pass
 
-    def save_report(self):
+    def save_report(self, new_path=False):
         """Save report.
 
         If the poutput are several files copy temporary dir to user
@@ -203,25 +203,32 @@ class ReportsPlugin(SpyderPluginWidget):
         report_filename = self.report_widget.get_focus_report()
         if report_filename is None:
             return
-        output_filename = self._reports[report_filename].render_dir
+        report = self._reports[report_filename]
 
-        input_dir, input_fname = osp.split(report_filename)
+        output_filename = report.render_dir
+        input_dir, _ = osp.split(report_filename)
         tmpdir, output_fname = osp.split(output_filename)
+
+        output = None if new_path else report.save_path
 
         if len([name for name in os.listdir(tmpdir)]) > 1:
             # if there is more than one file save a dir
-            dirname = getexistingdirectory(parent=self,
-                                           caption='Save Report',
-                                           basedir=input_dir)
+            if output is None:
+                output = getexistingdirectory(parent=self,
+                                              caption='Save Report',
+                                              basedir=input_dir)
+                report.save_path = output
             # Using distutils instead of shutil.copytree
             # because shutil.copytree fails if the dir already exists
-            copy_tree(tmpdir, dirname)
+            copy_tree(tmpdir, output)
         else:
-            basedir = osp.join(input_dir, output_fname)
-            filename, _ = getsavefilename(parent=self,
-                                          caption='Save Report',
-                                          basedir=basedir)
-            shutil.copy(output_filename, filename)
+            if output is None:
+                basedir = osp.join(input_dir, output_fname)
+                output, _ = getsavefilename(parent=self,
+                                            caption='Save Report',
+                                            basedir=basedir)
+                report.save_path = output
+            shutil.copy(output_filename, output)
 
     def run_reports_render(self):
         """Call report rendering and displays its output."""
