@@ -28,6 +28,7 @@ from spyder.py3compat import PY3
 from spyder.utils.programs import TEMPDIR
 from spyder.utils.qthelpers import create_action
 from spyder.utils.workers import WorkerManager
+from spyder.utils import icon_manager as ima
 
 from .widgets.reportsgui import ReportsWidget
 
@@ -119,6 +120,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
         self.save_action = create_action(self,
                                          "Save Report...",
+                                         icon=ima.icon('filesave'),
                                          triggered=self.save_report)
 
         self.main.run_menu_actions += [self.render_action]
