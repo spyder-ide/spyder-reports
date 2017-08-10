@@ -81,12 +81,14 @@ class ReportsPlugin(SpyderPluginWidget):
         self.main = parent  # Spyder 3 compatibility
         self.render_action = None
         self.save_action = None
+        self.save_as_action = None
 
         # Initialize plugin
         self.initialize_plugin()
 
         # Create widget and add to dockwindow
-        self.report_widget = ReportsWidget(self.main, [self.save_action])
+        self.report_widget = ReportsWidget(self.main, [self.save_action,
+                                                       self.save_as_action])
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
@@ -123,9 +125,13 @@ class ReportsPlugin(SpyderPluginWidget):
                                          icon=ima.icon('filesave'),
                                          triggered=self.save_report)
 
+        self.save_as_action = create_action(self,
+                                            "Save Report as...",
+                                            icon=ima.icon('filesaveas'),
+                                            triggered=self.save_as_report)
         self.main.run_menu_actions += [self.render_action]
 
-        return [self.render_action, self.save_action]
+        return [self.render_action, self.save_action, self.save_as_action]
 
     def register_plugin(self):
         """Register plugin in Spyder's main window."""
@@ -176,6 +182,9 @@ class ReportsPlugin(SpyderPluginWidget):
         messageBox.setText(message)
         messageBox.setStandardButtons(QMessageBox.Ok)
         messageBox.show()
+
+    def save_as_report(self):
+        pass
 
     def save_report(self):
         """Save report.
