@@ -196,6 +196,8 @@ class ReportsPlugin(SpyderPluginWidget):
             dirname = getexistingdirectory(parent=self,
                                            caption='Save Report',
                                            basedir=input_dir)
+            # Using distutils instead of shutil.copytree
+            # because shutil.copytree fails if the dir already exists
             copy_tree(tmpdir, dirname)
         else:
             basedir = osp.join(input_dir, output_fname)
