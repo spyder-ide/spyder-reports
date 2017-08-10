@@ -193,10 +193,15 @@ class ReportsPlugin(SpyderPluginWidget):
     def save_report(self, new_path=False):
         """Save report.
 
-        If the poutput are several files copy temporary dir to user
+        If the report was already saved, save it in the same path.
+
+        If the output are several files copy temporary dir to user
         selected directory.
 
-        If the oputput is just one file copy it, to the user selected path.
+        If the output is just one file copy it, to the user selected path.
+
+        Args:
+            new_path: force saving in a new path
         """
         report_filename = self.report_widget.get_focus_report()
         if report_filename is None:
@@ -209,6 +214,9 @@ class ReportsPlugin(SpyderPluginWidget):
 
         output = None if new_path else report.save_path
 
+        # TODO This should be improved because Pweave creates a
+        # figures dir even when there isn't figures causing this
+        # to evaluate always to True
         if len([name for name in os.listdir(tmpdir)]) > 1:
             # if there is more than one file save a dir
             if output is None:
