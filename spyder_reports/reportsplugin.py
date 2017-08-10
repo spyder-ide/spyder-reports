@@ -118,7 +118,7 @@ class ReportsPlugin(SpyderPluginWidget):
                                            triggered=self.run_reports_render)
 
         self.save_action = create_action(self,
-                                         "Save Report",
+                                         "Save Report...",
                                          triggered=self.save_report)
 
         self.main.run_menu_actions += [self.render_action]

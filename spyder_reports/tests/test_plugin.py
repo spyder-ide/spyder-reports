@@ -84,9 +84,9 @@ def test_get_plugin_actions(qtbot, setup_reports):
     menu_actions = reports.get_plugin_actions()
 
     assert len(menu_actions) == 2
-    assert menu_actions[0].text() == "Render report to HTML"
-    assert menu_actions[1].text() == "Save Report"
-    assert reports.main.run_menu_actions[0].text() == "Render report to HTML"
+    assert "Render report to HTML" in menu_actions[0].text()
+    assert "Save Report" in menu_actions[1].text()
+    assert "Render report to HTML" in reports.main.run_menu_actions[0].text()
 
 
 def test_run_reports_render(qtbot, setup_reports, report_file):
