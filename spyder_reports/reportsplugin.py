@@ -201,6 +201,8 @@ class ReportsPlugin(SpyderPluginWidget):
         If the oputput is just one file copy it, to the user selected path.
         """
         report_filename = self.report_widget.get_focus_report()
+        if report_filename is None:
+            return
         output_filename = self._reports[report_filename].render_dir
 
         input_dir, input_fname = osp.split(report_filename)

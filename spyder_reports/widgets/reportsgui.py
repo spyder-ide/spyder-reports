@@ -187,7 +187,10 @@ class ReportsWidget(QWidget):
 
     def get_focus_report(self):
         """Return current report."""
-        return self.filenames[self.tabs.currentIndex()]
+        try:
+            return self.filenames[self.tabs.currentIndex()]
+        except IndexError:
+            return None
 
 
 def test():  # pragma: no cover
