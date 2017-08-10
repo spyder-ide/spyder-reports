@@ -184,5 +184,25 @@ def test_menu_actions(qtbot):
     assert action in reports.tabs.cornerWidget().menu().actions()
 
 
+def test_get_focus_report(setup_reports_close_tab):
+    """Test get current report."""
+    reports, close_tab = setup_reports_close_tab
+
+    fname1 = osp.join('dir', 'file1')
+    fname2 = osp.join('dir', 'file2')
+    reports.set_html('some html', fname1)
+    reports.set_html('some html', fname2)
+    assert reports.tabs.count() == 2
+    assert reports.get_focus_report() == fname2
+
+    # close 'file2'
+    close_tab(1)
+    assert reports.get_focus_report() == fname1
+
+    # close 'file1'
+    close_tab(0)
+    assert reports.get_focus_report() is None
+
+
 if __name__ == "__main__":
     pytest.main()
