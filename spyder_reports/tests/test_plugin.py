@@ -253,5 +253,16 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
     assert set(os.listdir(folder)) == set(os.listdir(save_folder))
 
 
+def test_save_no_report(setup_reports):
+    """Test save report when no report is open.
+
+    Should do nothing, but shouldn't raise an error.
+    """
+    reports = setup_reports
+    reports.report_widget.get_focus_report = lambda: None
+
+    reports.save_report()
+
+
 if __name__ == "__main__":
     pytest.main()
