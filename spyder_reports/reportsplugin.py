@@ -15,6 +15,7 @@ import shutil
 from distutils.dir_util import copy_tree
 from contextlib import redirect_stdout
 from io import StringIO
+from collections import defaultdict
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
@@ -56,6 +57,11 @@ class CaptureStdOutput(StringIO):
         """Emit a signal instead of writing. (Overloaded method)."""
         self.sig_write.emit(text.strip())
         return len(text)
+
+
+class Report():
+    render_tmpdir = None
+    save_path = None
 
 
 class ReportsPlugin(SpyderPluginWidget):
@@ -101,8 +107,8 @@ class ReportsPlugin(SpyderPluginWidget):
         # a report
         self._worker_manager = WorkerManager()
 
-        # Dict to save output files to regenerate files in the same tmpdir
-        self._output_tmpfile = {}
+        # Dict to save reports information:
+        self._reports = defaultdict(Report)
 
     # --- SpyderPluginWidget API ----------------------------------------------
     def get_plugin_title(self):
@@ -195,7 +201,7 @@ class ReportsPlugin(SpyderPluginWidget):
         If the oputput is just one file copy it, to the user selected path.
         """
         report_filename = self.report_widget.get_focus_report()
-        output_filename = self._output_tmpfile[report_filename]
+        output_filename = self._reports[report_filename].render_dir
 
         input_dir, input_fname = osp.split(report_filename)
         tmpdir, output_fname = osp.split(output_filename)
@@ -257,12 +263,14 @@ class ReportsPlugin(SpyderPluginWidget):
             Output file path
         """
         if output is None:
-            output = self._output_tmpfile.get(file)
+            report = self._reports.get(file)
+            if report is not None:
+                output = report.render_dir
             if output is None:
                 name = osp.splitext(osp.basename(file))[0]
                 id_ = str(uuid.uuid4())
                 output = osp.join(REPORTS_TEMPDIR, id_, '{}.html'.format(name))
-                self._output_tmpfile[file] = output
+                self._reports[file].render_dir = output
 
         folder = osp.split(output)[0]
         self.check_create_tmp_dir(folder)
