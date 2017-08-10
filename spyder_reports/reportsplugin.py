@@ -223,6 +223,8 @@ class ReportsPlugin(SpyderPluginWidget):
                 output = getexistingdirectory(parent=self,
                                               caption='Save Report',
                                               basedir=input_dir)
+                if not osp.isdir(output):
+                    return
                 report.save_path = output
             # Using distutils instead of shutil.copytree
             # because shutil.copytree fails if the dir already exists
@@ -233,6 +235,8 @@ class ReportsPlugin(SpyderPluginWidget):
                 output, _ = getsavefilename(parent=self,
                                             caption='Save Report',
                                             basedir=basedir)
+                if not osp.isfile(output):
+                    return
                 report.save_path = output
             shutil.copy(output_filename, output)
 
