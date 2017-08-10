@@ -252,6 +252,11 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
 
     assert set(os.listdir(folder)) == set(os.listdir(save_folder))
 
+    # Saving again shouldn't call getexistingdirectory
+    monkeypatch.setattr('spyder_reports.reportsplugin.getexistingdirectory',
+                        lambda *args, **kwargs: exec('raise(Exception())'))
+    reports.save_report()
+
 
 def test_save_no_report(setup_reports):
     """Test save report when no report is open.
