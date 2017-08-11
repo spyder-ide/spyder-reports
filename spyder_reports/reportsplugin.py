@@ -60,6 +60,17 @@ class CaptureStdOutput(StringIO):
 
 
 class Report():
+    """Report file.
+
+    Save information about a rendered report
+
+    render_tmpdir (str): Temporary dir path where the render has been saved
+    save_path (str) Path where the plugin was last saved.
+
+    TODO: Some ReportPlugin logic, as save_report, render_report could be
+    moved to this class.
+    """
+
     render_tmpdir = None
     save_path = None
 
