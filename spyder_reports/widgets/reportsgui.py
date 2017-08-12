@@ -108,6 +108,7 @@ class ReportsWidget(QWidget):
             renderview.setHtml(html_text)
 
         self.tabs.setCurrentWidget(renderview)
+        self.tabs.currentChanged.emit(self.tabs.currentIndex())
 
     def set_html_from_file(self, output_fname, input_fname=None):
         """Set html text from a file."""

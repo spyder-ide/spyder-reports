@@ -13,6 +13,7 @@ import os.path as osp
 # Spyder-IDE and Local imports
 from spyder.utils.programs import TEMPDIR
 from spyder_reports.reportsplugin import ReportsPlugin
+from spyder_reports.utils import WELCOME_PATH
 
 
 @pytest.fixture
@@ -285,6 +286,35 @@ def test_save_no_report(setup_reports):
     reports.report_widget.get_focus_report = lambda: None
 
     reports.save_report()
+
+
+def test_activate_deactivate_actions(qtbot, setup_reports, report_file):
+    """Test that actions should be deactivated if welcome page is open."""
+    reports = setup_reports
+
+    class MainMock():
+        run_menu_actions = []
+
+        def add_dockwidget(*args):
+            pass
+
+    # patch reports object with mock MainWindow
+    reports.main = MainMock()
+
+    reports.get_plugin_actions()
+    reports.register_plugin()
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+        reports.render_report_thread(WELCOME_PATH)
+
+    assert not reports.save_action.isEnabled()
+    assert not reports.save_as_action.isEnabled()
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
+        reports.render_report_thread(report_file)
+
+    qtbot.waitUntil(reports.save_action.isEnabled)
+    qtbot.waitUntil(reports.save_as_action.isEnabled)
 
 
 if __name__ == "__main__":

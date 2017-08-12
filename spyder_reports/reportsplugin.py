@@ -115,6 +115,9 @@ class ReportsPlugin(SpyderPluginWidget):
         self.sig_render_progress.connect(self.report_widget.update_progress)
         self.sig_render_finished.connect(self.report_widget.render_finished)
 
+        self.report_widget.tabs.currentChanged.connect(
+                self.update_actions_status)
+
         # This worker runs in a thread to avoid blocking when rendering
         # a report
         self._worker_manager = WorkerManager()
@@ -159,6 +162,9 @@ class ReportsPlugin(SpyderPluginWidget):
         # Render welcome.md in a temp location
         self.render_report_thread(WELCOME_PATH)
 
+        self.save_action.setEnabled(False)
+        self.save_as_action.setEnabled(False)
+
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
         self.main.tabify_plugins(self.main.help, self)
@@ -185,6 +191,14 @@ class ReportsPlugin(SpyderPluginWidget):
         return valid, ", ".join(messages)
 
     # -------------------------------------------------------------------------
+
+    def update_actions_status(self):
+        """Disable/enable actions, avoiding the welcome page to be saved."""
+        report = self.report_widget.get_focus_report()
+        enabled = report is not None and report != WELCOME_PATH
+
+        self.save_action.setEnabled(enabled)
+        self.save_as_action.setEnabled(enabled)
 
     def check_create_tmp_dir(self, folder):
         """Create temp dir if it does not exists."""
