@@ -15,6 +15,8 @@ from qtpy.QtWebEngineWidgets import WEBENGINE
 from spyder_reports.widgets.reportsgui import ReportsWidget
 from spyder.utils.qthelpers import create_action
 
+from spyder_reports.utils import WELCOME_PATH
+
 
 def same_html(widget, html):
     """Check if certain html content is exactly the same in a web widget."""
@@ -79,8 +81,9 @@ def test_overwrite_welcome(qtbot):
     It should overwrite 'Welcome' tab instead.
     """
     reports = setup_reports(qtbot)
+    reports.set_html('some html', WELCOME_PATH)
 
-    renderview = reports.renderviews['Welcome']
+    renderview = reports.renderviews[WELCOME_PATH]
     reports.set_html('some html', 'file name')
 
     assert reports.tabs.count() == 1

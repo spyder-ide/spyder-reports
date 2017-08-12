@@ -23,6 +23,8 @@ from spyder.widgets.tabs import BaseTabs
 from spyder.utils import icon_manager as ima
 from spyder.utils.qthelpers import (add_actions, create_toolbutton)
 
+from ..utils import WELCOME_PATH
+
 
 class RenderView(FrameWebView):
     """Web widget that shows rendered report."""
@@ -81,16 +83,14 @@ class ReportsWidget(QWidget):
         layout.addWidget(self.progress_bar)
         self.setLayout(layout)
 
-        self.set_html('', 'Welcome')
-
     def set_html(self, html_text, fname, base_url=None):
         """Set html text."""
         name = self.disambiguate_fname(fname)
         renderview = self.renderviews.get(fname)
 
-        if 'Welcome' in self.renderviews and renderview is None:
+        if WELCOME_PATH in self.renderviews and renderview is None:
             # Overwrite the welcome tab
-            renderview = self.renderviews.pop('Welcome')
+            renderview = self.renderviews.pop(WELCOME_PATH)
             self.renderviews[fname] = renderview
             self.tabs.setTabText(0, name)
             self.filenames[0] = fname

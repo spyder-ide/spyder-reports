@@ -32,6 +32,7 @@ from spyder.utils.workers import WorkerManager
 from spyder.utils import icon_manager as ima
 
 from .widgets.reportsgui import ReportsWidget
+from .utils import WELCOME_PATH
 
 try:
     from spyder.api.plugins import SpyderPluginWidget
@@ -156,8 +157,7 @@ class ReportsPlugin(SpyderPluginWidget):
         self.main.add_dockwidget(self)
 
         # Render welcome.md in a temp location
-        welcome_path = osp.join(osp.dirname(__file__), 'utils', 'welcome.md')
-        self.render_report_thread(welcome_path)
+        self.render_report_thread(WELCOME_PATH)
 
     def on_first_registration(self):
         """Action to be performed on first plugin registration."""
