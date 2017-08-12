@@ -25,6 +25,16 @@ def setup_reports(qtbot, monkeypatch):
     reports = ReportsPlugin(None)
     qtbot.addWidget(reports)
     reports.show()
+
+    class MainMock():
+        run_menu_actions = []
+
+    # patch reports object with mock MainWindow
+    reports.main = MainMock()
+
+    # setup plugin actions (render, save, save as)
+    reports.get_plugin_actions()
+
     return reports
 
 
@@ -75,12 +85,6 @@ def test_check_compability(qtbot, setup_reports, monkeypatch):
 def test_get_plugin_actions(qtbot, setup_reports):
     """Test get plugin actions method."""
     reports = setup_reports
-
-    class MainMock():
-        run_menu_actions = []
-
-    # patch reports object with mock MainWindow
-    reports.main = MainMock()
 
     menu_actions = reports.get_plugin_actions()
 
@@ -291,18 +295,6 @@ def test_save_no_report(setup_reports):
 def test_activate_deactivate_actions(qtbot, setup_reports, report_file):
     """Test that actions should be deactivated if welcome page is open."""
     reports = setup_reports
-
-    class MainMock():
-        run_menu_actions = []
-
-        def add_dockwidget(*args):
-            pass
-
-    # patch reports object with mock MainWindow
-    reports.main = MainMock()
-
-    reports.get_plugin_actions()
-    reports.register_plugin()
 
     with qtbot.waitSignal(reports.sig_render_finished, timeout=5000):
         reports.render_report_thread(WELCOME_PATH)
