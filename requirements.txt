@@ -1,3 +1,2 @@
 spyder>=3.2
 pweave
-matplotlib

@@ -2,3 +2,4 @@ include CHANGELOG.md
 include CONTRIBUTORS.md
 include LICENSE.txt
 include README.rst
+recursive-include spyder_reports/utils/templates *.md
