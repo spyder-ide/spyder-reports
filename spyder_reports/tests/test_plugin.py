@@ -60,6 +60,27 @@ def test_basic_initialization(qtbot, setup_reports):
     assert reports is not None
 
 
+def test_register_plugin(qtbot, setup_reports):
+    """Test register plugin, It should render welcome page."""
+    reports = setup_reports
+
+    def add_dockwidget(*args):
+        pass
+
+    reports.main.add_dockwidget = add_dockwidget
+
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=5000) as sig:
+        reports.register_plugin()
+
+    ok, filename, error = sig.args
+    assert ok
+    assert error is None
+    assert 'welcome' in filename
+
+    # Assert that reports exist
+    assert reports is not None
+
+
 def test_basic_render(qtbot, report_file, setup_reports):
     """Test rendering of an basic .mdw report returning a .html file."""
     reports = setup_reports
