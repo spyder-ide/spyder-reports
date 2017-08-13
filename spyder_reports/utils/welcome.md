@@ -8,3 +8,6 @@ mathematical equations and graphics. It uses the the
 [Pweave](http://mpastell.com/pweave/) project to generate the reports.
 
 Please use the _Run > Render report to HTML_ menu entry to render a report.
+
+Reports are rendered in a temporary location, if you want to save them
+use the tooltip menu.

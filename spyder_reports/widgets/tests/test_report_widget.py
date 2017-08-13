@@ -13,6 +13,9 @@ from qtpy.QtWebEngineWidgets import WEBENGINE
 
 # Spyder-IDE and Local imports
 from spyder_reports.widgets.reportsgui import ReportsWidget
+from spyder.utils.qthelpers import create_action
+
+from spyder_reports.utils import WELCOME_PATH
 
 
 def same_html(widget, html):
@@ -36,6 +39,17 @@ def setup_reports(qtbot):
     widget = ReportsWidget(None)
     qtbot.addWidget(widget)
     return widget
+
+
+@pytest.fixture
+def setup_reports_actions(qtbot):
+    """Set up reports, with some actions."""
+    action = create_action(None,
+                           "Some action",
+                           triggered=lambda self: None)
+    widget = ReportsWidget(None, [action])
+    qtbot.addWidget(widget)
+    return widget, action
 
 
 @pytest.fixture
@@ -67,8 +81,9 @@ def test_overwrite_welcome(qtbot):
     It should overwrite 'Welcome' tab instead.
     """
     reports = setup_reports(qtbot)
+    reports.set_html('some html', WELCOME_PATH)
 
-    renderview = reports.renderviews['Welcome']
+    renderview = reports.renderviews[WELCOME_PATH]
     reports.set_html('some html', 'file name')
 
     assert reports.tabs.count() == 1
@@ -163,6 +178,33 @@ def test_set_html_from_file(qtbot, tmpdir_factory):
     renderviews = reports.renderviews.get(str(html_file))
     qtbot.waitUntil(lambda: same_html(renderviews.page(), html), timeout=5000)
     assert same_html(renderviews.page(), html)
+
+
+def test_menu_actions(qtbot):
+    """Test adding tooltip menu to teh widget."""
+    reports, action = setup_reports_actions(qtbot)
+
+    assert action in reports.tabs.cornerWidget().menu().actions()
+
+
+def test_get_focus_report(setup_reports_close_tab):
+    """Test get current report."""
+    reports, close_tab = setup_reports_close_tab
+
+    fname1 = osp.join('dir', 'file1')
+    fname2 = osp.join('dir', 'file2')
+    reports.set_html('some html', fname1)
+    reports.set_html('some html', fname2)
+    assert reports.tabs.count() == 2
+    assert reports.get_focus_report() == fname2
+
+    # close 'file2'
+    close_tab(1)
+    assert reports.get_focus_report() == fname1
+
+    # close 'file1'
+    close_tab(0)
+    assert reports.get_focus_report() is None
 
 
 if __name__ == "__main__":
