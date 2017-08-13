@@ -37,7 +37,7 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['spyder>=3.2.0.dev0', 'pweave']
+REQUIREMENTS = ['spyder>=3.2.0', 'pweave']
 
 
 setup(
@@ -50,13 +50,14 @@ setup(
     license='MIT',
     author='Spyder Project Contributors',
     author_email='admin@spyder-ide.org',
-    description='Spyder-IDE plugin for Markdown reports using Pweave and Stitch.',
+    description='Spyder-IDE plugin for Markdown reports using Pweave.',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=REQUIREMENTS,
+    include_package_data=True,
     package_data={'spyder_reports.utils': ['*.md']},
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
