@@ -13,9 +13,14 @@ import os.path as osp
 import uuid
 import shutil
 from distutils.dir_util import copy_tree
-from contextlib import redirect_stdout
 from io import StringIO
 from collections import defaultdict
+try:
+    from contextlib import redirect_stdout
+except ImportError:  # pragma: no cover
+    def redirect_stdout(stdout):
+        """Fallback function for python2 compatibility."""
+        return stdout
 
 # Third party imports
 from pweave import Pweb, __version__ as pweave_version
