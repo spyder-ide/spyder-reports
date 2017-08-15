@@ -41,10 +41,8 @@ REQUIREMENTS = ['spyder>=3.2.0', 'pweave']
 
 
 setup(
-    name='spyder_reports',
-
+    name='spyder-reports',
     version=get_version(),
-
     keywords=['Spyder', 'Plugin'],
     url='https://github.com/spyder-ide/spyder-ide',
     license='MIT',
