@@ -54,5 +54,5 @@ This project depends on:
 Overview
 --------
 
-.. image:: doc/reports_screenshot.png
+.. image:: https://github.com/spyder-ide/spyder-reports/blob/master/doc/reports_screenshot.png
    :alt: Reports Screenshot
