@@ -6,7 +6,7 @@ To release a new version of Spyder Reports:
 
 * git checkout master
 
-* git fetch upstream && get merge upstream/master
+* git fetch upstream && git merge upstream/master
 
 * Update CHANGELOG.md with loghub
 
@@ -14,9 +14,9 @@ To release a new version of Spyder Reports:
 
 * git add . && git commit -m 'Release X.X.X'
 
-* python setup.py sdist upload
+* python3 setup.py sdist upload
 
-* python setup.py bdist_wheel upload
+* python3 setup.py bdist_wheel upload
 
 * git tag -a vX.X.X -m 'Release X.X.X'
 
