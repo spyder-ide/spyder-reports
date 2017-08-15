@@ -69,7 +69,7 @@ def test_register_plugin(qtbot, setup_reports):
 
     reports.main.add_dockwidget = add_dockwidget
 
-    with qtbot.waitSignal(reports.sig_render_finished, timeout=6000) as sig:
+    with qtbot.waitSignal(reports.sig_render_finished, timeout=10000) as sig:
         reports.register_plugin()
 
     ok, filename, error = sig.args
