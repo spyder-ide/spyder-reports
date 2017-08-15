@@ -25,7 +25,6 @@ from qtpy.QtCore import Qt, Signal
 from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
-from spyder.py3compat import PY3
 from spyder.utils.programs import TEMPDIR
 from spyder.utils.qthelpers import create_action
 from spyder.utils.workers import WorkerManager
@@ -177,14 +176,10 @@ class ReportsPlugin(SpyderPluginWidget):
         """
         Check plugin requirements.
 
-        - python version is greater or equal to 3.
         - PyQt version is greater or equal to 5.
         """
         messages = []
         valid = True
-        if not PY3:
-            messages.append('Spyder-reports does not work with Python2')
-            valid = False
         if PYQT4 or PYSIDE:
             messages.append('Spyder-reports does not work with Qt4')
             valid = False
