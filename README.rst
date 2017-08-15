@@ -3,7 +3,6 @@ Spyder reports plugin
 
 Spyder plugin to render Markdown reports using
 `Pweave <https://github.com/mpastell/Pweave>`_ as a backend.
-It only works in Python 3 because Pweave only works in Python 3.
 
 Build status
 ------------
