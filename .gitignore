@@ -7,3 +7,10 @@ __pycache__
 
 # Coverage
 .coverage
+
+# Build files
+build/
+dist/
+
+# git .orig files
+*.orig
