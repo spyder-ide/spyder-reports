@@ -56,7 +56,7 @@ class CaptureStdOutput(StringIO):
         Args:
             sig_write (Signal): signal to emit
         """
-        super(CaptureStdOutput).__init__()
+        super(CaptureStdOutput, self).__init__()
         self.sig_write = sig_write
 
     def write(self, text):
