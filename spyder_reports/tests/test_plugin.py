@@ -276,9 +276,12 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
 
     assert set(os.listdir(folder)) == set(os.listdir(save_folder))
 
+    def raise_exception():
+        raise(Exception())
+
     # Saving again shouldn't call getexistingdirectory
     monkeypatch.setattr('spyder_reports.reportsplugin.getexistingdirectory',
-                        lambda *args, **kwargs: exec('raise(Exception())'))
+                        raise_exception)
     reports.save_report()
 
     # Saving a new location (Save Report as...)
@@ -295,7 +298,7 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
                         lambda *args, **kwargs: '')
 
     monkeypatch.setattr('spyder_reports.reportsplugin.copy_tree',
-                        lambda *args, **kwargs: exec('raise(Exception())'))
+                        raise_exception)
 
     reports.save_report(new_path=True)
 
