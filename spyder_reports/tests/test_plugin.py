@@ -93,14 +93,12 @@ def test_basic_render(qtbot, report_file, setup_reports):
 def test_check_compability(qtbot, setup_reports, monkeypatch):
     """Test state and message returned by check_compatibility."""
     monkeypatch.setattr('spyder_reports.reportsplugin.PYQT4', True)
-    monkeypatch.setattr('spyder_reports.reportsplugin.PY3', False)
 
     reports = setup_reports
 
     valid, message = reports.check_compatibility()
     assert not valid
     assert 'qt4' in message.lower()
-    assert 'python2' in message.lower()
 
 
 def test_get_plugin_actions(qtbot, setup_reports):
@@ -278,9 +276,12 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
 
     assert set(os.listdir(folder)) == set(os.listdir(save_folder))
 
+    def raise_exception():
+        raise(Exception())
+
     # Saving again shouldn't call getexistingdirectory
     monkeypatch.setattr('spyder_reports.reportsplugin.getexistingdirectory',
-                        lambda *args, **kwargs: exec('raise(Exception())'))
+                        raise_exception)
     reports.save_report()
 
     # Saving a new location (Save Report as...)
@@ -297,7 +298,7 @@ def test_save_report(qtbot, tmpdir_factory, setup_reports, report_file,
                         lambda *args, **kwargs: '')
 
     monkeypatch.setattr('spyder_reports.reportsplugin.copy_tree',
-                        lambda *args, **kwargs: exec('raise(Exception())'))
+                        raise_exception)
 
     reports.save_report(new_path=True)
 
