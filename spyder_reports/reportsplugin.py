@@ -25,6 +25,7 @@ from qtpy.QtCore import Qt, Signal
 from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
+from spyder.py3compat import to_text_string
 from spyder.utils.programs import TEMPDIR
 from spyder.utils.qthelpers import create_action
 from spyder.utils.workers import WorkerManager
@@ -276,8 +277,9 @@ class ReportsPlugin(SpyderPluginWidget):
                 self.report_widget.set_html_from_file(output_file, file_name)
                 self.sig_render_finished.emit(True, output_file, None)
             else:
-                self.show_error_message(str(error))
-                self.sig_render_finished.emit(False, file_name, str(error))
+                self.show_error_message(to_text_string(error))
+                self.sig_render_finished.emit(False, file_name,
+                                              to_text_string(error))
 
         # Before starting a new worker process make sure to end previous
         # incarnations
@@ -307,7 +309,7 @@ class ReportsPlugin(SpyderPluginWidget):
                 output = report.render_dir
             if output is None:
                 name = osp.splitext(osp.basename(file))[0]
-                id_ = str(uuid.uuid4())
+                id_ = to_text_string(uuid.uuid4())
                 output = osp.join(REPORTS_TEMPDIR, id_, '{}.html'.format(name))
                 self._reports[file].render_dir = output
 
