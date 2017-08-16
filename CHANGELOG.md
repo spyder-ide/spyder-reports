@@ -1,3 +1,20 @@
+## Version 0.1.1 (2017-08-16)
+
+### Issues Closed
+
+* [Issue 55](https://github.com/spyder-ide/spyder-reports/issues/55) - Add Python 2 Support
+* [Issue 54](https://github.com/spyder-ide/spyder-reports/issues/54) - Add build and dist to .gitignore
+* [Issue 53](https://github.com/spyder-ide/spyder-reports/issues/53) - Change readme image url for complete url
+
+In this release 3 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 57](https://github.com/spyder-ide/spyder-reports/pull/57) - PR: Misc fixes
+* [PR 56](https://github.com/spyder-ide/spyder-reports/pull/56) - PR: Add Python 2 support
+
+In this release 2 pull requests  were merged
+
 ## Version 0.1 (2017-08-15)
 
 ### New features
