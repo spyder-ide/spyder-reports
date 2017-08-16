@@ -14,9 +14,9 @@ To release a new version of Spyder Reports:
 
 * git add . && git commit -m 'Release X.X.X'
 
-* python3 setup.py sdist upload
+* python setup.py sdist upload
 
-* python3 setup.py bdist_wheel upload
+* python setup.py bdist_wheel upload
 
 * git tag -a vX.X.X -m 'Release X.X.X'
 
