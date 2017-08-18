@@ -44,7 +44,7 @@ setup(
     name='spyder-reports',
     version=get_version(),
     keywords=['Spyder', 'Plugin'],
-    url='https://github.com/spyder-ide/spyder-ide',
+    url='https://github.com/spyder-ide/spyder-reports',
     license='MIT',
     author='Spyder Project Contributors',
     author_email='admin@spyder-ide.org',
