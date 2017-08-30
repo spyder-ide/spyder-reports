@@ -339,7 +339,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
         if pweave_version.startswith('0.3'):
             with redirect_stdout(f):
-                self.sig_render_progress.emit("Readign")
+                self.sig_render_progress.emit("Reading")
                 doc.read()
                 self.sig_render_progress.emit("Running")
                 doc.run()
