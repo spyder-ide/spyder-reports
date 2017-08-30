@@ -135,6 +135,11 @@ class ReportsPlugin(SpyderPluginWidget):
         """Return widget title."""
         return "Reports"
 
+    def get_focus_widget(self):
+        """Return the widget to give focus to."""
+        renderview = self.report_widget.get_current_report_widget()
+        return renderview or self.report_widget
+
     def refresh_plugin(self):
         """Refresh Reports widget."""
         pass

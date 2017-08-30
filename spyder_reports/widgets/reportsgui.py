@@ -193,6 +193,10 @@ class ReportsWidget(QWidget):
         except IndexError:
             return None
 
+    def get_current_report_widget(self):
+        """Return current renderview."""
+        return self.tabs.currentWidget()
+
 
 def test():  # pragma: no cover
     """Run Find in Files widget test."""
