@@ -328,10 +328,10 @@ class ReportsPlugin(SpyderPluginWidget):
         doc = Pweb(file, output=output)
 
         # TODO Add more formats support
-        if doc.file_ext == '.mdw':
+        if doc.file_ext in ['.mdw', '.md']:
             _format = 'md2html'
-        elif doc.file_ext == '.md':
-            _format = 'pandoc2html'
+            if PANDOC_INSTALLED:
+                _format = 'pandoc2html'
         else:
             raise Exception("Format not supported ({})".format(doc.file_ext))
 
