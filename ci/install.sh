@@ -12,14 +12,13 @@ export PATH="$HOME/miniconda/bin:$PATH"
 source activate test
 
 conda install -q ciocheck -c spyder-ide --no-update-deps
-conda install -q pandoc
 
 # Install dependencies
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
     pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 matplotlib
     pip install git+ssh://git@github.com/mpastell/Pweave.git
 else
-    conda install -q matplotlib
+    conda install -q matplotlib pandoc
     pip install -q pweave
 fi
 
