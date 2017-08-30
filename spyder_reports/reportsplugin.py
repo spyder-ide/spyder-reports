@@ -37,7 +37,7 @@ from spyder.utils.workers import WorkerManager
 from spyder.utils import icon_manager as ima
 
 from .widgets.reportsgui import ReportsWidget
-from .utils import WELCOME_PATH
+from .utils import WELCOME_PATH, PWEAVE03, PANDOC_INSTALLED
 
 try:
     from spyder.api.plugins import SpyderPluginWidget
@@ -337,7 +337,7 @@ class ReportsPlugin(SpyderPluginWidget):
 
         f = CaptureStdOutput(self.sig_render_progress)
 
-        if pweave_version.startswith('0.3'):
+        if PWEAVE03:
             with redirect_stdout(f):
                 self.sig_render_progress.emit("Reading")
                 doc.read()
