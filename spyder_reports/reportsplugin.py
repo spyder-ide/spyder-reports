@@ -344,7 +344,8 @@ class ReportsPlugin(SpyderPluginWidget):
                 self.sig_render_progress.emit("Running")
                 doc.run()
                 self.sig_render_progress.emit("Formating")
-                doc.format(doctype=_format)
+                doc.setformat(doctype=_format)
+                doc.format()
                 self.sig_render_progress.emit("Writing")
                 doc.write()
             return doc.sink
