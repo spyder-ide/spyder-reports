@@ -110,8 +110,12 @@ class ReportsPlugin(SpyderPluginWidget):
         self.initialize_plugin()
 
         # Create widget and add to dockwindow
-        self.report_widget = ReportsWidget(self.main, [self.save_action,
-                                                       self.save_as_action])
+        self.report_widget = ReportsWidget(self.main,
+                                           menu_actions=[self.save_action,
+                                                         self.save_as_action,
+                                                         self.undock_action],
+                                           options_button=self.options_button,
+                                           options_menu=self.options_menu)
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
@@ -137,7 +141,8 @@ class ReportsPlugin(SpyderPluginWidget):
 
     def refresh_plugin(self):
         """Refresh Reports widget."""
-        pass
+        self.options_menu.clear()
+        self.get_plugin_actions()
 
     def get_plugin_actions(self):
         """Return a list of actions related to plugin."""

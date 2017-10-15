@@ -37,7 +37,8 @@ class RenderView(FrameWebView):
 class ReportsWidget(QWidget):
     """Reports widget."""
 
-    def __init__(self, parent, menu_actions=None):
+    def __init__(self, parent, menu_actions=None, options_button=None,
+                 options_menu=None):
         """Initialiaze ReportsWidget."""
         QWidget.__init__(self, parent)
 
@@ -69,14 +70,15 @@ class ReportsWidget(QWidget):
 
         # Menu as corner widget
         if self.menu_actions:
-            options_button = create_toolbutton(self,
-                                               text='Options',
-                                               icon=ima.icon('tooloptions'))
-            options_button.setPopupMode(QToolButton.InstantPopup)
-            menu = QMenu(self)
-            add_actions(menu, self.menu_actions)
-            options_button.setMenu(menu)
-            self.tabs.setCornerWidget(options_button)
+            self.options_button = options_button or create_toolbutton(
+                                                self,
+                                                text='Options',
+                                                icon=ima.icon('tooloptions'))
+            self.options_button.setPopupMode(QToolButton.InstantPopup)
+            self.options_menu = options_menu or QMenu(self)
+            add_actions(self.options_menu, self.menu_actions)
+            self.options_button.setMenu(self.options_menu)
+            self.tabs.setCornerWidget(self.options_button)
 
         layout = QVBoxLayout()
         layout.addWidget(self.tabs)
