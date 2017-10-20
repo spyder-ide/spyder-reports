@@ -109,8 +109,8 @@ class ReportsPlugin(SpyderPluginWidget):
         # Initialize plugin
         self.initialize_plugin()
 
-        # Create widget and add to dockwindow. For compatibility with Spyder 3.x
-        # here we check if the plugin has the attributes
+        # Create widget and add to dockwindow. For compatibility with
+        # Spyder 3.x here we check if the plugin has the attributes
         # 'options_button' and 'options_menu'. See issue 68
         if hasattr(self, 'options_button') and hasattr(self, 'options_menu'):
             # Works with Spyder 4.x
@@ -119,8 +119,8 @@ class ReportsPlugin(SpyderPluginWidget):
                     menu_actions=[self.save_action,
                                   self.save_as_action,
                                   self.undock_action],
-                                  options_button=self.options_button,
-                                  options_menu=self.options_menu)
+                    options_button=self.options_button,
+                    options_menu=self.options_menu)
         else:
             # Works with Spyder 3.x
             self.report_widget = ReportsWidget(
