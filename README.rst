@@ -62,6 +62,23 @@ Overview
 .. image:: https://github.com/spyder-ide/spyder-reports/blob/master/doc/reports_screenshot.png
    :alt: Reports Screenshot
 
+Important Announcement: Spyder is unfunded!
+-------------------------------------------
+
+Since mid November/2017, `Anaconda, Inc <https://www.anaconda.com/>`_ has
+stopped funding Spyder development, after doing it for the past 18
+months. Because of that, development will focus from now on maintaining
+Spyder 3 at a much slower pace than before.
+
+If you want to contribute to maintain Spyder, please consider donating at
+
+https://opencollective.com/spyder
+
+We appreciate all the help you can provide us and can't thank you enough for
+supporting the work of Spyder devs and Spyder development.
+
+If you want to know more about this, please read this
+`page <https://github.com/spyder-ide/spyder/wiki/Anaconda-stopped-funding-Spyder>`_
 
 Backers
 -------
