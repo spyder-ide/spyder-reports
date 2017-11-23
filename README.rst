@@ -21,9 +21,9 @@ Project information
 .. |pypi version| image:: https://img.shields.io/pypi/v/spyder-reports.svg
   :target: https://pypi.python.org/pypi/spyder-reports
   :alt: Latest PyPI version
-.. |gitter| image:: https://badges.gitter.im/spyder-ide/spyder-reports.svg
-  :target: https://gitter.im/spyder-ide/spyder-reports
-  :alt: Join the chat at https://gitter.im/spyder-ide/spyder-reports
+.. |gitter| image:: https://badges.gitter.im/spyder-ide/public.svg
+  :target: https://gitter.im/spyder-ide/public
+  :alt: Join the chat at https://gitter.im/spyder-ide/public
 .. |coverage| image:: https://coveralls.io/repos/github/spyder-ide/spyder-reports/badge.svg
   :target: https://coveralls.io/github/spyder-ide/spyder-reports?branch=master
   :alt: Code Coverage
