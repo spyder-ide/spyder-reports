@@ -10,7 +10,7 @@ Build status
 
 Project information
 -------------------
-|license| |pypi version| |gitter|
+|license| |pypi version| |gitter| |opencollective sponsors| |opencollective backers|
 
 .. |circleci status| image:: https://img.shields.io/circleci/project/github/spyder-ide/spyder-reports/master.svg
   :target: https://circleci.com/gh/spyder-ide/spyder-reports/tree/master
@@ -27,7 +27,12 @@ Project information
 .. |coverage| image:: https://coveralls.io/repos/github/spyder-ide/spyder-reports/badge.svg
   :target: https://coveralls.io/github/spyder-ide/spyder-reports?branch=master
   :alt: Code Coverage
-
+.. |opencollective sponsors| image:: https://opencollective.com/spyder/backers/badge.svg?color=blue
+  :target: #backers
+  :alt: OpenCollective Backers
+.. |opencollective backers| image:: https://opencollective.com/spyder/sponsors/badge.svg?color=blue
+  :target: #Sponsors
+  :alt: OpenCollective Sponsors
 
 Installation
 ------------
@@ -56,3 +61,22 @@ Overview
 
 .. image:: https://github.com/spyder-ide/spyder-reports/blob/master/doc/reports_screenshot.png
    :alt: Reports Screenshot
+
+
+Backers
+-------
+
+Support us with a monthly donation and help us continue our activities.
+
+.. image:: https://opencollective.com/spyder/backers.svg
+   :target: https://opencollective.com/spyder#support
+   :alt: Backers
+
+Sponsors
+--------
+
+Become a sponsor to get your logo on our README on Github.
+
+.. image:: https://opencollective.com/spyder/sponsors.svg
+   :target: https://opencollective.com/spyder#support
+   :alt: Backers
