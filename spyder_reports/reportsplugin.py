@@ -109,9 +109,24 @@ class ReportsPlugin(SpyderPluginWidget):
         # Initialize plugin
         self.initialize_plugin()
 
-        # Create widget and add to dockwindow
-        self.report_widget = ReportsWidget(self.main, [self.save_action,
-                                                       self.save_as_action])
+        # Create widget and add to dockwindow. For compatibility with
+        # Spyder 3.x here we check if the plugin has the attributes
+        # 'options_button' and 'options_menu'. See issue 68
+        if hasattr(self, 'options_button') and hasattr(self, 'options_menu'):
+            # Works with Spyder 4.x
+            self.report_widget = ReportsWidget(
+                    self.main,
+                    menu_actions=[self.save_action,
+                                  self.save_as_action,
+                                  self.undock_action],
+                    options_button=self.options_button,
+                    options_menu=self.options_menu)
+        else:
+            # Works with Spyder 3.x
+            self.report_widget = ReportsWidget(
+                    self.main,
+                    menu_actions=[self.save_action, self.save_as_action])
+
         layout = QVBoxLayout()
         layout.addWidget(self.report_widget)
         self.setLayout(layout)
@@ -137,7 +152,11 @@ class ReportsPlugin(SpyderPluginWidget):
 
     def refresh_plugin(self):
         """Refresh Reports widget."""
-        pass
+        # For compatibility with Spyder 3.x here we check if the plugin
+        # has the attributes 'options_button' and 'options_menu'. See issue 68
+        if hasattr(self, 'options_button') and hasattr(self, 'options_menu'):
+            self.options_menu.clear()
+            self.get_plugin_actions()
 
     def get_plugin_actions(self):
         """Return a list of actions related to plugin."""
