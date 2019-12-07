@@ -6,7 +6,7 @@ Spyder plugin to render Markdown reports using
 
 Build status
 ------------
-|circleci status| |coverage|
+|circleci status| |coverage| |crowdin|
 
 Project information
 -------------------
@@ -33,6 +33,9 @@ Project information
 .. |opencollective backers| image:: https://opencollective.com/spyder/sponsors/badge.svg?color=blue
   :target: #Sponsors
   :alt: OpenCollective Sponsors
+.. |crowdin| image:: https://badges.crowdin.net/spyder-reports/localized.svg
+  :target: https://crowdin.com/project/spyder
+  :alt: Crowdin
 
 Installation
 ------------
