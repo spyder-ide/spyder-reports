@@ -16,14 +16,18 @@ from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLabel, QWidget, QMenu,
                             QToolButton)
 
 # Spyder-IDE and Local imports
-from spyder.widgets.browser import FrameWebView
-from spyder.utils.sourcecode import disambiguate_fname
-from spyder.widgets.waitingspinner import QWaitingSpinner
-from spyder.widgets.tabs import BaseTabs
+from spyder.config.base import get_translation
 from spyder.utils import icon_manager as ima
+from spyder.utils.sourcecode import disambiguate_fname
 from spyder.utils.qthelpers import (add_actions, create_toolbutton)
-
+from spyder.widgets.browser import FrameWebView
+from spyder.widgets.tabs import BaseTabs
+from spyder.widgets.waitingspinner import QWaitingSpinner
+s
 from ..utils import WELCOME_PATH
+
+# For translations
+_ = get_translation('spyder_terminal')
 
 
 class RenderView(FrameWebView):
@@ -70,7 +74,7 @@ class ReportsWidget(QWidget):
         # Menu as corner widget
         if self.menu_actions:
             options_button = create_toolbutton(self,
-                                               text='Options',
+                                               text=_('Options'),
                                                icon=ima.icon('tooloptions'))
             options_button.setPopupMode(QToolButton.InstantPopup)
             menu = QMenu(self)

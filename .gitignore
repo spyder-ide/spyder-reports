@@ -14,3 +14,5 @@ dist/
 
 # git .orig files
 *.orig
+
+.DS_Store
