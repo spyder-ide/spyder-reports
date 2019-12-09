@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: spyder-reports\n"
-"POT-Creation-Date: 2019-12-07 18:28-0500\n"
-"PO-Revision-Date: 2019-12-07 23:29\n"
+"POT-Creation-Date: 2019-12-09 10:18-0500\n"
+"PO-Revision-Date: 2019-12-09 15:23\n"
 "Last-Translator: Gonzalo Peña-Castellanos (goanpeca)\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,7 @@ msgstr ""
 "X-Crowdin-File: /master/spyder_reports/locale/spyder_reports.pot\n"
 "Language: pt_BR\n"
 
-#:
-#: /Users/gpena-castellanos/develop/quansight/spyder-reports/spyder_reports/widgets/reportsgui.py:77
+#: spyder_reports/widgets/reportsgui.py:77
 msgid "Options"
 msgstr ""
 
