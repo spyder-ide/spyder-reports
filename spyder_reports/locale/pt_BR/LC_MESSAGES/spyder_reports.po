@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spyder-reports\n"
 "POT-Creation-Date: 2019-12-09 10:18-0500\n"
-"PO-Revision-Date: 2019-12-09 15:23\n"
+"PO-Revision-Date: 2019-12-10 15:20\n"
 "Last-Translator: Gonzalo Peña-Castellanos (goanpeca)\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -18,5 +18,5 @@ msgstr ""
 
 #: spyder_reports/widgets/reportsgui.py:77
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
