@@ -37,7 +37,7 @@ from spyder.utils.workers import WorkerManager
 from spyder.utils import icon_manager as ima
 
 from .widgets.reportsgui import ReportsWidget
-from .utils import WELCOME_PATH
+from .utils import WELCOME_PATH, PWEAVE03, PANDOC_INSTALLED
 
 try:
     from spyder.api.plugins import SpyderPluginWidget
@@ -134,6 +134,11 @@ class ReportsPlugin(SpyderPluginWidget):
     def get_plugin_title(self):
         """Return widget title."""
         return "Reports"
+
+    def get_focus_widget(self):
+        """Return the widget to give focus to."""
+        renderview = self.report_widget.get_current_report_widget()
+        return renderview or self.report_widget
 
     def refresh_plugin(self):
         """Refresh Reports widget."""
@@ -323,23 +328,24 @@ class ReportsPlugin(SpyderPluginWidget):
         doc = Pweb(file, output=output)
 
         # TODO Add more formats support
-        if doc.file_ext == '.mdw':
+        if doc.file_ext in ['.mdw', '.md']:
             _format = 'md2html'
-        elif doc.file_ext == '.md':
-            _format = 'pandoc2html'
+            if PANDOC_INSTALLED:
+                _format = 'pandoc2html'
         else:
             raise Exception("Format not supported ({})".format(doc.file_ext))
 
         f = CaptureStdOutput(self.sig_render_progress)
 
-        if pweave_version.startswith('0.3'):
+        if PWEAVE03:
             with redirect_stdout(f):
-                self.sig_render_progress.emit("Readign")
+                self.sig_render_progress.emit("Reading")
                 doc.read()
                 self.sig_render_progress.emit("Running")
                 doc.run()
                 self.sig_render_progress.emit("Formating")
-                doc.format(doctype=_format)
+                doc.setformat(doctype=_format)
+                doc.format()
                 self.sig_render_progress.emit("Writing")
                 doc.write()
             return doc.sink

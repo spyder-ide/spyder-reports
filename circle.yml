@@ -4,14 +4,14 @@ machine:
   environment:
     # Python versions to tests (Maximum of 4 different versions)
     # The last container is used to test with pyqt5 wheels
-    # python3.6. pip, pweave 0.3alpha from git/master
-    # python3.5 conda, pweave 0.2.5
-    # python2.7 conda, pweave 0.2.5
+    # python3.6, pweave from git/master
+    # python3.5, latest pweave 0.30
+    # python2.7, legacy pweave 0.25 :(
     PY_VERSIONS: "3.6 3.5 2.7"
     # Environment variables used by astropy helpers
     TRAVIS_OS_NAME: "linux"
     CONDA_DEPENDENCIES_FLAGS: "--quiet"
-    CONDA_DEPENDENCIES: "pytest pytest-cov"
+    CONDA_DEPENDENCIES: "pyqt pytest pytest-cov"
     PIP_DEPENDENCIES: "coveralls pytest-qt pytest-xvfb"
 
 dependencies:

@@ -11,3 +11,6 @@ Please use the _Run > Render report to HTML_ menu entry to render a report.
 
 Reports are rendered in a temporary location, if you want to save them
 use the tooltip menu.
+
+Markdown reports are rendered use `pandoc` if it is installed otherwise
+`md2html`. Please install `pandoc` if you want to use pandoc extensions.

@@ -12,15 +12,20 @@ export PATH="$HOME/miniconda/bin:$PATH"
 source activate test
 
 conda install -q ciocheck -c spyder-ide --no-update-deps
-conda install -q pandoc
 
 # Install dependencies
 if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-    pip install -q markdown pygments ipython nbformat nbconvert jupyter_client pyqt5 matplotlib
+    # python3.6, pweave from git/master
+    pip install -q matplotlib
     pip install git+ssh://git@github.com/mpastell/Pweave.git
-else
-    conda install -q matplotlib
+elif [ "$CIRCLE_NODE_INDEX" = "1" ]; then
+    # python3.5, latest pweave 0.30
+    conda install -q matplotlib pandoc
     pip install -q pweave
+else
+    # python2.7, legacy pweave 0.25 :(
+    conda install -q matplotlib
+    pip install -q pweave==0.25
 fi
 
 # Bring Spyder dependencies (install/uninstall Spyder)

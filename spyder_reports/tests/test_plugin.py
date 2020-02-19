@@ -13,7 +13,7 @@ import os.path as osp
 # Spyder-IDE and Local imports
 from spyder.utils.programs import TEMPDIR
 from spyder_reports.reportsplugin import ReportsPlugin
-from spyder_reports.utils import WELCOME_PATH
+from spyder_reports.utils import WELCOME_PATH, PWEAVE03
 
 
 @pytest.fixture
@@ -185,7 +185,10 @@ def test_render_report_thread_error(qtbot, setup_reports):
 
     ok, filename, error = sig.args
     assert not ok
-    assert "[Errno 2]" in error
+    if PWEAVE03:
+        assert "unknown url type" in error
+    else:
+        assert "[Errno 2]" in error
     assert filename == 'file_that_doesnt_exist.mdw'
 
     def tab_closed():
