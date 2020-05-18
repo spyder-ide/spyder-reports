@@ -1,6 +1,12 @@
 Spyder reports plugin 
 =====================
 
+-----
+
+This plugin is unmaintained and not compatible with the latest release of Pweave.  To help update it or see the status of that work, visit `this issue <https://github.com/spyder-ide/spyder-reports/issues/76>`_.
+
+-----
+
 Spyder plugin to render Markdown reports using
 `Pweave <https://github.com/mpastell/Pweave>`_ as a backend.
 
