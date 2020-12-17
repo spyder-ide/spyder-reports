@@ -26,7 +26,7 @@ from spyder.widgets.waitingspinner import QWaitingSpinner
 from ..utils import WELCOME_PATH
 
 # For translations
-_ = get_translation('spyder_terminal')
+_ = get_translation('spyder_reports')
 
 
 class RenderView(FrameWebView):
