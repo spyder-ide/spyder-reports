@@ -53,9 +53,9 @@ def setup_reports_actions(qtbot):
 
 
 @pytest.fixture
-def setup_reports_close_tab(qtbot):
+def setup_reports_close_tab(qtbot, setup_reports):
     """Set up reports widget, witha handy function to close tabs."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     def close_tab(index):
         """Find the close button and click it."""
@@ -68,19 +68,18 @@ def setup_reports_close_tab(qtbot):
     return reports, close_tab
 
 
-def test_reports(qtbot):
+def test_reports(setup_reports):
     """Run Reports Widget."""
-    reports = setup_reports(qtbot)
-    assert reports
+    assert setup_reports
 
 
-def test_overwrite_welcome(qtbot):
+def test_overwrite_welcome(setup_reports):
     """
     Test that the first rendering doesn't create a new tab.
 
     It should overwrite 'Welcome' tab instead.
     """
-    reports = setup_reports(qtbot)
+    reports = setup_reports
     reports.set_html('some html', WELCOME_PATH)
 
     renderview = reports.renderviews[WELCOME_PATH]
@@ -91,9 +90,9 @@ def test_overwrite_welcome(qtbot):
     assert reports.renderviews['file name'] == renderview
 
 
-def test_open_several_tabs(qtbot):
+def test_open_several_tabs(setup_reports):
     """Test behaviour when opening several tabs."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     reports.set_html('some html', 'file1')
     reports.set_html('some html', 'file2')
@@ -108,14 +107,14 @@ def test_open_several_tabs(qtbot):
     assert reports.tabs.count() == 2
 
 
-def test_close_tabs(qtbot):
+def test_close_tabs(setup_reports_close_tab):
     """
     Test closing tabs.
 
     When a tab is closed also the reference to the renderview should be
     removed.
     """
-    reports, close_tab = setup_reports_close_tab(qtbot)
+    reports, close_tab = setup_reports_close_tab
 
     fname1 = osp.join('dir', 'file1')
     fname2 = osp.join('dir', 'file2')
@@ -134,9 +133,9 @@ def test_close_tabs(qtbot):
     assert reports.renderviews.get(fname1) is None
 
 
-def test_move_tabs(qtbot):
+def test_move_tabs(setup_reports_close_tab):
     """Test that move_tab moves filenames list."""
-    reports, close_tab = setup_reports_close_tab(qtbot)
+    reports, close_tab = setup_reports_close_tab
 
     reports.set_html('some html', 'file1')
     reports.set_html('some html', 'file2')
@@ -152,9 +151,9 @@ def test_move_tabs(qtbot):
     assert reports.renderviews.get('file1') is None
 
 
-def test_set_html(qtbot):
+def test_set_html(qtbot, setup_reports):
     """Test set html."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     html = "<html><head></head><body>some html</body></html>"
     reports.set_html(html, 'file1')
@@ -164,9 +163,9 @@ def test_set_html(qtbot):
     assert same_html(renderviews.page(), html)
 
 
-def test_set_html_from_file(qtbot, tmpdir_factory):
+def test_set_html_from_file(qtbot, setup_reports, tmpdir_factory):
     """Test seting a html from a file."""
-    reports = setup_reports(qtbot)
+    reports = setup_reports
 
     # Create html file
     html = "<html><head></head><body>some html</body></html>"
@@ -180,9 +179,9 @@ def test_set_html_from_file(qtbot, tmpdir_factory):
     assert same_html(renderviews.page(), html)
 
 
-def test_menu_actions(qtbot):
+def test_menu_actions(setup_reports_actions):
     """Test adding tooltip menu to teh widget."""
-    reports, action = setup_reports_actions(qtbot)
+    reports, action = setup_reports_actions
 
     assert action in reports.tabs.cornerWidget().menu().actions()
 
