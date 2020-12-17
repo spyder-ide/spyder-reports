@@ -11,10 +11,11 @@ import os
 import os.path as osp
 
 # Spyder-IDE and Local imports
-from spyder.utils.programs import TEMPDIR
+import spyder.utils.programs
 from spyder_reports.reportsplugin import ReportsPlugin
 from spyder_reports.utils import WELCOME_PATH
 
+TEMPDIR = spyder.utils.programs.get_temp_dir()
 
 @pytest.fixture
 def setup_reports(qtbot, monkeypatch):

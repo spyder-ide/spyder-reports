@@ -31,7 +31,7 @@ from qtpy.QtWidgets import QVBoxLayout, QMessageBox
 
 # Spyder-IDE and Local imports
 from spyder.py3compat import to_text_string
-from spyder.utils.programs import TEMPDIR
+import spyder.utils.programs
 from spyder.utils.qthelpers import create_action
 from spyder.utils.workers import WorkerManager
 from spyder.utils import icon_manager as ima
@@ -44,6 +44,7 @@ try:
 except ImportError:
     from spyder.plugins import SpyderPluginWidget  # Spyder 3 compatibility
 
+TEMPDIR = spyder.utils.programs.get_temp_dir()
 REPORTS_TEMPDIR = osp.join(TEMPDIR, 'reports')
 
 

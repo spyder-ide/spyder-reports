@@ -23,11 +23,10 @@ from spyder.utils.qthelpers import (add_actions, create_toolbutton)
 from spyder.widgets.browser import FrameWebView
 from spyder.widgets.tabs import BaseTabs
 from spyder.widgets.waitingspinner import QWaitingSpinner
-s
 from ..utils import WELCOME_PATH
 
 # For translations
-_ = get_translation('spyder_terminal')
+_ = get_translation('spyder_reports')
 
 
 class RenderView(FrameWebView):
