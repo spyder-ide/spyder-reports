@@ -1,2 +1,2 @@
-spyder>=3.2
+spyder>=3.3.2
 pweave
